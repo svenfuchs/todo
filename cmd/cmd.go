@@ -32,9 +32,10 @@ func (c Cmd) formatted(items []item.Item) []string {
   return format.New(c.Format).Apply(items)
 }
 
+
 func NewList(path string, filter item.Filter, format string) List {
-  in   := source.New(path)
-  out  := source.New("")
+  in  := source.New(path)
+  out := source.New("")
   return List{ Cmd { in, out, filter, format } }
 }
 
@@ -49,6 +50,13 @@ func (c List) Run() {
   c.output(list)
 }
 
+func NewToggle(path string, filter item.Filter) Toggle {
+  in  := source.New(path)
+  out := source.New(path)
+  // out := source.New("")
+  return Toggle{ Cmd { in, out, filter, "full" } }
+}
+
 type Toggle struct {
   Cmd
 }
@@ -56,6 +64,6 @@ type Toggle struct {
 func (c Toggle) Run() {
   c.Format = "full"
   list := c.list()
-  list  = list.Toggle(c.Filter)
+  list = list.Toggle(c.Filter)
   c.output(list)
 }

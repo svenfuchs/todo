@@ -3,9 +3,9 @@ package source_test
 import (
   "io/ioutil"
   "os"
-  "reflect"
   "testing"
   "github.com/svenfuchs/todo.go/source"
+  . "github.com/svenfuchs/todo.go/test"
 )
 
 const (
@@ -38,9 +38,7 @@ func TestSourceFileReadLines(t *testing.T) {
   actual, _ := source.New(path).ReadLines()
   expected  := []string{ "- foo [1]", "x bar [2]" }
 
-  if !reflect.DeepEqual(actual, expected) {
-    t.Fatalf("Expected Status to be %q, but was: %q", expected, actual)
-  }
+  AssertEqual(t, actual, expected)
 }
 
 func TestSourceFileWriteLines(t *testing.T) {
@@ -50,8 +48,6 @@ func TestSourceFileWriteLines(t *testing.T) {
   actual, _ := source.ReadLines()
   expected  := []string{ "- foo [1]", "x bar [2]" }
 
-  if !reflect.DeepEqual(actual, expected) {
-    t.Fatalf("Expected Status to be %q, but was: %q", expected, actual)
-  }
+  AssertEqual(t, actual, expected)
 }
 

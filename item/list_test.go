@@ -1,9 +1,9 @@
 package item_test
 
 import (
-  "reflect"
   "testing"
   "github.com/svenfuchs/todo.go/item"
+  . "github.com/svenfuchs/todo.go/test"
 )
 
 func TestListItems(t *testing.T) {
@@ -11,23 +11,14 @@ func TestListItems(t *testing.T) {
   actual   := items[0].Status
   expected := item.Pend
 
-  if !reflect.DeepEqual(actual, expected) {
-    t.Fatalf("Expected Status to be %q, but was: %q", expected, actual)
-  }
+  AssertEqual(t, actual, expected)
 }
 
 func TestListNextId(t *testing.T) {
   list := item.ParseList([]string{ "- foo [1]", "+ bar [2]" })
 
-  id := list.NextId()
-  if !reflect.DeepEqual(id, 3) {
-    t.Fatalf("Expected MaxId to be %s, but was: %s", 3, id)
-  }
-
-  id = list.NextId()
-  if !reflect.DeepEqual(id, 4) {
-    t.Fatalf("Expected MaxId to be %s, but was: %s", 4, id)
-  }
+  AssertEqual(t, list.NextId(), 3)
+  AssertEqual(t, list.NextId(), 4)
 }
 
 func TestListSize(t *testing.T) {
@@ -35,9 +26,7 @@ func TestListSize(t *testing.T) {
   actual   := list.Size()
   expected := 2
 
-  if !reflect.DeepEqual(actual, expected) {
-    t.Fatalf("Expected Size to be %q, but was: %q", expected, actual)
-  }
+  AssertEqual(t, actual, expected)
 }
 
 func TestListIds(t *testing.T) {
@@ -45,9 +34,7 @@ func TestListIds(t *testing.T) {
   actual   := list.Ids()
   expected := []int{ 1, 2 }
 
-  if !reflect.DeepEqual(actual, expected) {
-    t.Fatalf("Expected ids to be %s, but was: %s", expected, actual)
-  }
+  AssertEqual(t, actual, expected)
 }
 
 // func TestListFindByIdFound(t *testing.T) {
@@ -56,9 +43,7 @@ func TestListIds(t *testing.T) {
 //   actual   := item.Text
 //   expected := "foo"
 //
-//   if !reflect.DeepEqual(actual, expected) {
-//     t.Fatalf("Expected Text to be %s, but was: %s", expected, actual)
-//   }
+//   AssertEqual(t, actual, expected)  }
 // }
 //
 // func TestListFindByIdMissing(t *testing.T) {
@@ -76,9 +61,7 @@ func TestListIds(t *testing.T) {
 //   actual   := item.Text
 //   expected := "fooooo"
 //
-//   if !reflect.DeepEqual(actual, expected) {
-//     t.Fatalf("Expected Text to be %s, but was: %s", expected, actual)
-//   }
+//   AssertEqual(t, actual, expected)  }
 // }
 //
 // func TestListFindByTextMissing(t *testing.T) {
@@ -105,9 +88,7 @@ func TestListSelectById(t *testing.T) {
   actual   := item.Text
   expected := "foo"
 
-  if !reflect.DeepEqual(actual, expected) {
-    t.Fatalf("Expected %s, but was: %s", expected, actual)
-  }
+  AssertEqual(t, actual, expected)
 }
 
 func TestListSelectByTextFound(t *testing.T) {
@@ -116,9 +97,7 @@ func TestListSelectByTextFound(t *testing.T) {
   actual   := item.Text
   expected := "fooooo"
 
-  if !reflect.DeepEqual(actual, expected) {
-    t.Fatalf("Expected %s, but was: %s", expected, actual)
-  }
+  AssertEqual(t, actual, expected)
 }
 
 func TestListRejectIf(t *testing.T) {
@@ -135,29 +114,6 @@ func TestListToggleFound(t *testing.T) {
   list  = list.Toggle(item.Filter{ Text: "bar" })
   i    := list.Items[2]
 
-  if !reflect.DeepEqual(i.Text, "bar") {
-    t.Fatalf("Expected Text to be %s, but was: %s", "bar", i.Text)
-  }
-
-  if !reflect.DeepEqual(i.Status, item.Pend) {
-    t.Fatalf("Expected Status to be %s, but was: %s", item.Pend, i.Status)
-  }
+  AssertEqual(t, i.Text, "bar")
+  AssertEqual(t, i.Status, item.Pend)
 }
-
-// func TestListToggleNotFound(t *testing.T) {
-//   list   := item.ParseList([]string{ "# Comment", "- foo [1]", "x bar [2]" })
-//   i, err := list.Toggle(item.Filter{ Text: "baz" })
-//
-//   if err == nil {
-//     t.Fatalf("Expected no item to be found, but was: %s", i)
-//   }
-// }
-//
-// func TestListToggleInvalidStatus(t *testing.T) {
-//   list   := item.ParseList([]string{ "# Comment", "- foo [1]", "x bar [2]" })
-//   i, err := list.Toggle(item.Filter{ Text: "Comment" })
-//
-//   if err == nil {
-//     t.Fatalf("Expected no item to be found, but was: %s", i)
-//   }
-// }

@@ -12,8 +12,8 @@ const (
 )
 
 func Parse(line string) Item {
-  p := parser{ line }
-  return Item { line, p.id(), p.status(), p.tags(), p.text(), p.projects() }
+  p := Parser { line }
+  return Item { line, p.Id(), p.Status(), p.Tags(), p.Text(), p.Projects() }
 }
 
 type Item struct {
@@ -27,25 +27,17 @@ type Item struct {
 
 func (i Item) Toggle() (Item, error) {
   switch i.Status {
-    case None:
-      return i, errors.New("Cannot toggle an item that is not either pending or done.")
+    case Pend:
+      i.Status = Done
+      i.Tags["done"] = time.Now().Format("2006-01-02")
+      return i, nil
     case Done:
-      i.SetPend()
+      i.Status = Pend
+      delete(i.Tags, "done")
       return i, nil
     default:
-      i.SetDone()
-      return i, nil
+      return i, errors.New("Cannot toggle an item that is not either pending or done.")
   }
-}
-
-func (i *Item) SetPend() {
-  i.Status = Pend
-  delete(i.Tags, "done")
-}
-
-func (i *Item) SetDone() {
-  i.Status = Done
-  i.Tags["done"] = time.Now().Format("2006-01-02")
 }
 
 func (i Item) IsDone() bool {

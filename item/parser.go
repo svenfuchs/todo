@@ -10,16 +10,16 @@ import (
 var (
   statusPattern   = regexp.MustCompile(`^([-x]{1})`)
   idPattern       = regexp.MustCompile(` \[(\d+)\]`)
-  tagsPattern     = regexp.MustCompile(` ([^\s]+):([^\s]+)`)
+  tagsPattern     = regexp.MustCompile(` ([\w\-]+):([\w\-]+)`)
   projectsPattern = regexp.MustCompile(` \+([\w\-]+)`)
 )
 
-type parser struct {
-  line string
+type Parser struct {
+  Line string
 }
 
-func (p parser) id() int {
-  matches:= idPattern.FindStringSubmatch(p.line)
+func (p Parser) Id() int {
+  matches:= idPattern.FindStringSubmatch(p.Line)
   if matches == nil {
     return 0
   }
@@ -27,8 +27,8 @@ func (p parser) id() int {
   return id
 }
 
-func (p parser) status() string {
-  match := statusPattern.FindString(p.line)
+func (p Parser) Status() string {
+  match := statusPattern.FindString(p.Line)
   switch match {
     case "-":
       return Pend
@@ -39,24 +39,24 @@ func (p parser) status() string {
   }
 }
 
-func (p parser) tags() map[string]string {
+func (p Parser) Tags() map[string]string {
   tags := map[string]string{}
-  for _, match := range tagsPattern.FindAllStringSubmatch(p.line, -1) {
+  for _, match := range tagsPattern.FindAllStringSubmatch(p.Line, -1) {
     tags[match[1]] = date.Normalize(match[2], date.Time)
   }
   return tags
 }
 
-func (p parser) text() string {
-  text := p.line
+func (p Parser) Text() string {
+  text := p.Line
   text = idPattern.ReplaceAllString(text, "")
   text = statusPattern.ReplaceAllString(text, "")
   text = tagsPattern.ReplaceAllString(text, "")
   return strings.TrimSpace(text)
 }
 
-func (p parser) projects() []string {
-  matches := projectsPattern.FindAllStringSubmatch(p.text(), -1)
+func (p Parser) Projects() []string {
+  matches := projectsPattern.FindAllStringSubmatch(p.Text(), -1)
   projects := []string{}
   for _, match := range matches {
     projects = append(projects, match[1])
