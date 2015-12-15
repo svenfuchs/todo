@@ -1,10 +1,9 @@
-package format
+package todo
 
 import (
   "fmt"
   "sort"
   "strings"
-  "github.com/svenfuchs/todo.go/item"
 )
 
 var formats = map[string][]string{
@@ -13,7 +12,7 @@ var formats = map[string][]string{
   "full":  []string{ "status", "text", "tags", "id" },
 }
 
-func New(format string) Format {
+func NewFormat(format string) Format {
   if format == "" {
     format = "short"
   }
@@ -28,7 +27,7 @@ type Format struct {
   format []string
 }
 
-func (f Format) Apply(items []item.Item) []string {
+func (f Format) Apply(items []Item) []string {
   var lines []string
   for _, item := range(items) {
     lines = append(lines, f.fmt(item))
@@ -36,15 +35,15 @@ func (f Format) Apply(items []item.Item) []string {
   return lines
 }
 
-func (f Format) fmt(item item.Item) string {
+func (f Format) fmt(item Item) string {
   if item.IsNone() {
-    return item.Line
+    return item.line
   } else {
     return f.fmtItem(item)
   }
 }
 
-func (f Format) fmtItem(item item.Item) string {
+func (f Format) fmtItem(item Item) string {
   var fields []string
   for _, format := range f.format {
     field := formatters[format](item)
@@ -55,7 +54,7 @@ func (f Format) fmtItem(item item.Item) string {
   return strings.Join(fields, " ")
 }
 
-var formatters = map[string]func(item item.Item) string {
+var formatters = map[string]func(item Item) string {
   "id":     fmtId,
   "status": fmtStatus,
   "text":   fmtText,
@@ -69,31 +68,31 @@ var statuses = map[string]string {
   "pend": "-",
 }
 
-func fmtStatus(item item.Item) string {
-  return statuses[string(item.Status)]
+func fmtStatus(item Item) string {
+  return statuses[string(item.status)]
 }
 
-func fmtText(item item.Item) string {
-  return item.Text
+func fmtText(item Item) string {
+  return item.text
 }
 
-func fmtTags(item item.Item) string {
+func fmtTags(item Item) string {
   var tags []string
-  for _, key := range sortedKeys(item.Tags) {
-    tags = append(tags, fmt.Sprintf("%s:%s", key, item.Tags[key]))
+  for _, key := range sortedKeys(item.tags) {
+    tags = append(tags, fmt.Sprintf("%s:%s", key, item.tags[key]))
   }
   return strings.Join(tags, " ")
 }
 
-func fmtId(item item.Item) string {
-  return fmt.Sprintf("[%d]", item.Id)
+func fmtId(item Item) string {
+  return fmt.Sprintf("[%d]", item.id)
 }
 
-func fmtDone(item item.Item) string {
+func fmtDone(item Item) string {
   return item.DoneDate()
 }
 
-func fmtDue(item item.Item) string {
+func fmtDue(item Item) string {
   return item.DueDate()
 }
 

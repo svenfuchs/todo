@@ -3,7 +3,7 @@ package date_test
 import (
   "reflect"
   "testing"
-  "github.com/svenfuchs/todo.go/date"
+  "github.com/svenfuchs/todo/date"
 )
 
 func TestDateParse(t *testing.T) {

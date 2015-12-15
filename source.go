@@ -1,4 +1,4 @@
-package source
+package todo
 
 import (
   "bufio"
@@ -8,22 +8,22 @@ import (
 
 // var stdin *os.File
 
-func New(path string) Io {
-  return File { path: path }
-}
-
-type Io interface {
+type Source interface {
   ReadLines() ([]string, error)
   MustReadLines() ([]string)
   WriteLines([]string) error
   MustWriteLines([]string)
 }
 
-type File struct {
+type FileSource struct {
   path string
 }
 
-func (f File) ReadLines() ([]string, error) {
+func NewFileSource(path string) Source {
+  return FileSource { path: path }
+}
+
+func (f FileSource) ReadLines() ([]string, error) {
   var (
     err error
     io *os.File
@@ -49,13 +49,13 @@ func (f File) ReadLines() ([]string, error) {
   return lines, scanner.Err()
 }
 
-func (f File) MustReadLines() []string {
+func (f FileSource) MustReadLines() []string {
   lines, err := f.ReadLines()
   check(err)
   return lines
 }
 
-func (f File) WriteLines(lines []string) error {
+func (f FileSource) WriteLines(lines []string) error {
   var (
     err error
     io *os.File
@@ -74,7 +74,7 @@ func (f File) WriteLines(lines []string) error {
   return err
 }
 
-func (f File) MustWriteLines(lines []string) {
+func (f FileSource) MustWriteLines(lines []string) {
   err := f.WriteLines(lines)
   check(err)
 }
@@ -85,24 +85,28 @@ func check(err error) {
   }
 }
 
-type Memory struct {
-  Content string
+type MemorySource struct {
+  content string
 }
 
-func (s *Memory) ReadLines() ([]string, error) {
-  return strings.Split(s.Content, "\n"), nil
+func NewMemorySource(content string) MemorySource {
+  return MemorySource { content }
 }
 
-func (s *Memory) MustReadLines() []string {
+func (s *MemorySource) ReadLines() ([]string, error) {
+  return strings.Split(s.content, "\n"), nil
+}
+
+func (s *MemorySource) MustReadLines() []string {
   lines, _ := s.ReadLines()
   return lines
 }
 
-func (s *Memory) WriteLines(lines []string) error {
-  s.Content = strings.Join(lines, "\n")
+func (s *MemorySource) WriteLines(lines []string) error {
+  s.content = strings.Join(lines, "\n")
   return nil
 }
 
-func (s *Memory) MustWriteLines(lines []string) {
+func (s *MemorySource) MustWriteLines(lines []string) {
   s.WriteLines(lines)
 }

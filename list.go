@@ -1,11 +1,11 @@
-package item
+package todo
 
 // import "fmt"
 
-func ParseList(lines []string) List {
+func ParseItemList(lines []string) List {
   items := []Item{}
   for _, line := range lines {
-    items = append(items, Parse(line))
+    items = append(items, ParseItem(line))
   }
   return List{ Items: items, nextId: maxId(items) }
 }
@@ -13,8 +13,8 @@ func ParseList(lines []string) List {
 func maxId(items []Item) int {
   id := 0
   for _, item := range items {
-    if id < item.Id {
-      id = item.Id
+    if id < item.id {
+      id = item.id
     }
   }
   return id
@@ -37,7 +37,7 @@ func (l *List) Size() int {
 func (l *List) Ids() []int {
   ids := []int{}
   for _, item := range l.Items {
-    ids = append(ids, item.Id)
+    ids = append(ids, item.id)
   }
   return ids
 }

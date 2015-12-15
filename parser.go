@@ -1,10 +1,10 @@
-package item
+package todo
 
 import (
   "regexp"
   "strconv"
   "strings"
-  "github.com/svenfuchs/todo.go/date"
+  "github.com/svenfuchs/todo/date"
 )
 
 var (
@@ -13,6 +13,10 @@ var (
   tagsPattern     = regexp.MustCompile(` ([\w\-]+):([\w\-]+)`)
   projectsPattern = regexp.MustCompile(` \+([\w\-]+)`)
 )
+
+func NewParser(line string) Parser {
+  return Parser{ line }
+}
 
 type Parser struct {
   Line string

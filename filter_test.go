@@ -1,149 +1,148 @@
-package item_test
+package todo
 
 import (
   "testing"
-  "github.com/svenfuchs/todo.go/item"
-  . "github.com/svenfuchs/todo.go/test"
+  . "github.com/svenfuchs/todo/test"
 )
 
 var (
   lines = []string{ "# Comment", "- foo +bar due:2015-12-13 [1]", "x baz done:2015-12-13 [2]" }
-  items = item.ParseList(lines).Items
+  items = ParseItemList(lines).Items
 )
 
 func Test_Filter_Empty(t *testing.T) {
-  filter := item.Filter{}
+  filter := Filter{}
   AssertTrue(t, filter.Apply(items[1]))
 }
 
 func Test_Filter_ById_Succeeds(t *testing.T) {
-  filter := item.Filter{ Id: 1 }
+  filter := Filter{ id: 1 }
   AssertTrue(t, filter.Apply(items[1]))
 }
 
 func Test_Filter_ById_Comment(t *testing.T) {
-  filter := item.Filter{ Id: 1 }
+  filter := Filter{ id: 1 }
   AssertFalse(t, filter.Apply(items[0]))
 }
 
 func Test_Filter_ById_Fails(t *testing.T) {
-  filter := item.Filter{ Id: 2 }
+  filter := Filter{ id: 2 }
   AssertFalse(t, filter.Apply(items[1]))
 }
 
 func Test_Filter_ById_TextIgnored_Succeeds(t *testing.T) {
-  filter := item.Filter{ Id: 1, Text: "ignored" }
+  filter := Filter{ id: 1, text: "ignored" }
   AssertTrue(t, filter.Apply(items[1]))
 }
 
 func Test_Filter_ByText_Succeeds(t *testing.T) {
-  filter := item.Filter{ Text: "fo" }
+  filter := Filter{ text: "fo" }
   AssertTrue(t, filter.Apply(items[1]))
 }
 
 func Test_Filter_ByText_Fails(t *testing.T) {
-  filter := item.Filter{ Text: "unknown" }
+  filter := Filter{ text: "unknown" }
   AssertFalse(t, filter.Apply(items[1]))
 }
 
 func Test_Filter_ByText_Comment(t *testing.T) {
-  filter := item.Filter{ Text: "Comment" }
+  filter := Filter{ text: "Comment" }
   AssertFalse(t, filter.Apply(items[0]))
 }
 
 func Test_Filter_ByProject_Succeeds(t *testing.T) {
-  filter := item.Filter{ Projects: []string{ "bar", "bam" } }
+  filter := Filter{ projects: []string{ "bar", "bam" } }
   AssertTrue(t, filter.Apply(items[1]))
 }
 
 func Test_Filter_ByProject_Fails(t *testing.T) {
-  filter := item.Filter{ Projects: []string{ "missing", "unknown" } }
+  filter := Filter{ projects: []string{ "missing", "unknown" } }
   AssertFalse(t, filter.Apply(items[1]))
 }
 
 func Test_Filter_ByStatus_Pend_Succeeds(t *testing.T) {
-  filter := item.Filter{ Status: item.Pend }
+  filter := Filter{ status: Pend }
   AssertTrue(t, filter.Apply(items[1]))
 }
 
 func Test_Filter_ByStatus_Pend_Fails(t *testing.T) {
-  filter := item.Filter{ Status: item.Pend }
+  filter := Filter{ status: Pend }
   AssertFalse(t, filter.Apply(items[2]))
 }
 
 func Test_Filter_ByStatus_Done_Succeeds(t *testing.T) {
-  filter := item.Filter{ Status: item.Pend }
+  filter := Filter{ status: Pend }
   AssertTrue(t, filter.Apply(items[1]))
 }
 
 func Test_Filter_ByStatus_Done_Fails(t *testing.T) {
-  filter := item.Filter{ Status: item.Done }
+  filter := Filter{ status: Done }
   AssertTrue(t, filter.Apply(items[2]))
 }
 
 // ------------------------------------------------------------------------------------
 
 func Test_Filter_ByDate_ModeDate_DoneDatePresent_Succeeds(t *testing.T) {
-  filter := item.Filter{ Date: "2015-12-13", Mode: "date" }
+  filter := Filter{ date: FilterDate { "2015-12-13", "date" } }
   AssertTrue(t, filter.Apply(items[2]))
 }
 
 func Test_Filter_ByDate_ModeDate_DoneDatePresent_Fails(t *testing.T) {
-  filter := item.Filter{ Date: "2015-12-12", Mode: "date" }
+  filter := Filter{ date: FilterDate { "2015-12-12", "date" } }
   AssertFalse(t, filter.Apply(items[2]))
 }
 
 func Test_Filter_ByDate_ModeDate_DoneDateMissing(t *testing.T) {
-  filter := item.Filter{ Date: "2015-12-13", Mode: "date" }
+  filter := Filter{ date: FilterDate { "2015-12-13", "date" } }
   AssertFalse(t, filter.Apply(items[1]))
 }
 
 func Test_Filter_ByDate_ModeBefore_DoneDatePresent_Succeeds(t *testing.T) {
-  filter := item.Filter{ Date: "2016-01-01", Mode: "before" }
+  filter := Filter{ date: FilterDate { "2016-01-01", "before" } }
   AssertTrue(t, filter.Apply(items[2]))
 }
 
 func Test_Filter_ByDate_ModeBefore_DoneDatePresent_Fails(t *testing.T) {
-  filter := item.Filter{ Date: "2015-12-01", Mode: "before" }
+  filter := Filter{ date: FilterDate { "2015-12-01", "before" } }
   AssertFalse(t, filter.Apply(items[2]))
 }
 
 func Test_Filter_ByDate_ModeBefore_DoneDateMissing(t *testing.T) {
-  filter := item.Filter{ Date: "2016-01-01", Mode: "before" }
+  filter := Filter{ date: FilterDate { "2016-01-01", "before" } }
   AssertFalse(t, filter.Apply(items[1]))
 }
 
 func Test_Filter_ByDate_ModeSince_EqualDoneDatePresent_Succeeds(t *testing.T) {
-  filter := item.Filter{ Date: "2015-12-13", Mode: "since" }
+  filter := Filter{ date: FilterDate { "2015-12-13", "since" } }
   AssertTrue(t, filter.Apply(items[2]))
 }
 
 func Test_Filter_ByDate_ModeSince_GreaterDoneDatePresent_Succeeds(t *testing.T) {
-  filter := item.Filter{ Date: "2015-12-01", Mode: "since" }
+  filter := Filter{ date: FilterDate { "2015-12-01", "since" } }
   AssertTrue(t, filter.Apply(items[2]))
 }
 
 func Test_Filter_ByDate_ModeSince_DoneDatePresent_Fails(t *testing.T) {
-  filter := item.Filter{ Date: "2016-01-01", Mode: "since" }
+  filter := Filter{ date: FilterDate { "2016-01-01", "since" } }
   AssertFalse(t, filter.Apply(items[2]))
 }
 
 func Test_Filter_ByDate_ModeSince_NoDoneDatePresent_Fails(t *testing.T) {
-  filter := item.Filter{ Date: "2015-12-01", Mode: "since" }
+  filter := Filter{ date: FilterDate { "2015-12-01", "since" } }
   AssertFalse(t, filter.Apply(items[1]))
 }
 
 func Test_Filter_ByDate_ModeAfter_DoneDatePresent_Succeeds(t *testing.T) {
-  filter := item.Filter{ Date: "2015-12-01", Mode: "after" }
+  filter := Filter{ date: FilterDate { "2015-12-01", "after" } }
   AssertTrue(t, filter.Apply(items[2]))
 }
 
 func Test_Filter_ByDate_ModeAfter_DoneDatePresent_Fails(t *testing.T) {
-  filter := item.Filter{ Date: "2016-01-01", Mode: "after" }
+  filter := Filter{ date: FilterDate { "2016-01-01", "after" } }
   AssertFalse(t, filter.Apply(items[2]))
 }
 
 func Test_Filter_ByDate_ModeAfter_NoDoneDatePresent_Fails(t *testing.T) {
-  filter := item.Filter{ Date: "2015-12-01", Mode: "after" }
+  filter := Filter{ date: FilterDate { "2015-12-01", "after" } }
   AssertFalse(t, filter.Apply(items[1]))
 }

@@ -1,11 +1,10 @@
-package source_test
+package todo
 
 import (
   "io/ioutil"
   "os"
   "testing"
-  "github.com/svenfuchs/todo.go/source"
-  . "github.com/svenfuchs/todo.go/test"
+  . "github.com/svenfuchs/todo/test"
 )
 
 const (
@@ -34,20 +33,18 @@ func checkErr(err error) {
   }
 }
 
-func TestSourceFileReadLines(t *testing.T) {
-  actual, _ := source.New(path).ReadLines()
+func TestFileSourceReadLines(t *testing.T) {
+  actual, _ := NewFileSource(path).ReadLines()
   expected  := []string{ "- foo [1]", "x bar [2]" }
-
   AssertEqual(t, actual, expected)
 }
 
-func TestSourceFileWriteLines(t *testing.T) {
-  source    := source.New(path)
+func TestFileSourceWriteLines(t *testing.T) {
+  source := NewFileSource(path)
   source.WriteLines([]string{ "- foo [1]", "x bar [2]" })
 
   actual, _ := source.ReadLines()
   expected  := []string{ "- foo [1]", "x bar [2]" }
-
   AssertEqual(t, actual, expected)
 }
 
