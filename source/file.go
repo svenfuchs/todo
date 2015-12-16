@@ -28,17 +28,19 @@ func (s FileSource) ReadLines() ([]string, error) {
 }
 
 func (s FileSource) WriteLines(lines []string) error {
-  io, err := os.OpenFile(s.path, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0644)
-  if err == nil { return err }
-  io.Write([]byte(strings.Join(lines, "\n") + "\n"))
+  return s.doWriteLines(lines, os.O_TRUNC)
+}
+
+func (s FileSource) AppendLines(lines []string) error {
+  return s.doWriteLines(lines, os.O_APPEND)
+}
+
+func (s FileSource) doWriteLines(lines []string, mode int) error {
+  if len(lines) == 0 { return nil }
+  file, err := os.OpenFile(s.path, os.O_WRONLY | os.O_CREATE | mode, 0644)
+  defer file.Close()
+  if err != nil { return err }
+  file.Write([]byte(strings.Join(lines, "\n") + "\n"))
   return nil
-}
-
-func (s FileSource) MustReadLines() []string {
-  return mustReadLines(s)
-}
-
-func (s FileSource) MustWriteLines(lines []string) {
-  mustWriteLines(s, lines)
 }
 

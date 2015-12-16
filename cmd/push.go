@@ -8,10 +8,10 @@ import (
 )
 
 
-func NewPushCmd(path string, filter Filter, config map[string]string) PushCmd {
+func NewPushCmd(path string, filter Filter, format string, config map[string]string) PushCmd {
   in  := NewSource(path)
   out := NewSource("")
-  return PushCmd{ Cmd { in, out, filter, "full" }, config }
+  return PushCmd{ Cmd { in, out, filter, format }, config }
 }
 
 type PushCmd struct {

@@ -52,6 +52,16 @@ func (l *List) Select(filter Filter) List {
   return List{ Items: items, nextId: l.nextId }
 }
 
+func (l *List) Reject(filter Filter) List {
+  items := []Item{}
+  for _, item := range l.Items {
+    if !filter.Apply(item) {
+      items = append(items, item)
+    }
+  }
+  return List{ Items: items, nextId: l.nextId }
+}
+
 func (l *List) RejectIf(match func(Item) bool) List {
   items := []Item{}
   for _, item := range l.Items {

@@ -17,8 +17,8 @@ type ListCmd struct {
 
 func (c ListCmd) Run() {
   list := c.list()
-  list  = list.Select(c.filter)
-  // list  = list.SortBy(func (item Item) string { return item.DoneDate() }) TODO
+  list = list.Select(c.filter)
+  // list = list.SortBy(func (item Item) string { return item.DoneDate() }) TODO
   c.output(list, c.format)
 }
 

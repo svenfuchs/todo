@@ -21,16 +21,12 @@ func (s StdioSource) ReadLines() ([]string, error) {
 }
 
 func (s StdioSource) WriteLines(lines []string) error {
+  if len(lines) == 0 { return nil }
   io := os.Stdout
   io.Write([]byte(strings.Join(lines, "\n") + "\n"))
   return nil
 }
 
-func (s StdioSource) MustReadLines() []string {
-  return mustReadLines(s)
+func (s StdioSource) AppendLines(lines []string) error {
+  return s.WriteLines(lines)
 }
-
-func (s StdioSource) MustWriteLines(lines []string) {
-  mustWriteLines(s, lines)
-}
-

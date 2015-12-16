@@ -32,6 +32,7 @@ func (o *Opts) setUser(value string)    { o.config["username"] = value }
 func (o *Opts) setToken(value string)   { o.config["token"] = value }
 func (o *Opts) setTeam(value string)    { o.config["team"] = value }
 func (o *Opts) setService(value string) { o.config["service"] = value }
+func (o *Opts) setArchive(value string) { o.config["archive"] = value }
 
 func (o *Opts) runList(c *kingpin.ParseContext) error {
   NewListCmd(o.path, o.filter(), o.format).Run()
@@ -48,7 +49,22 @@ func (o *Opts) runPush(c *kingpin.ParseContext) error {
   if o.date.IsEmpty() {
     o.date = NewFilterDate("yesterday", "since")
   }
-  NewPushCmd(o.path, o.filter(), o.config).Run()
+  if o.format == "" {
+    o.format = "full"
+  }
+  NewPushCmd(o.path, o.filter(), o.format, o.config).Run()
+	return nil
+}
+
+func (o *Opts) runArchive(c *kingpin.ParseContext) error {
+  o.status = Done
+  if o.date.IsEmpty() {
+    o.date = NewFilterDate("two weeks ago", "before")
+  }
+  if o.format == "" {
+    o.format = "full"
+  }
+  NewArchiveCmd(o.path, o.filter(), o.format, o.config).Run()
 	return nil
 }
 
@@ -85,6 +101,7 @@ func main() {
   h = &Opts{ config: map[string]string{} }
 	c = a.Command("push", "Push todo items.")
 	c.Flag("file",     "Todo.txt file to work with."            ).Short('f').StringVar(&h.path)
+	c.Flag("format",   "Output format."                         ).Short('o').StringVar(&h.format)
 	c.Flag("date",     "Filter by done date."                   ).Short('a').SetValue(&funcValue{ h.setDate  })
 	c.Flag("after",    "Filter by done after."                  ).Short('a').SetValue(&funcValue{ h.setAfter })
 	c.Flag("since",    "Filter by done since."                  ).Short('n').SetValue(&funcValue{ h.setSince })
@@ -95,15 +112,22 @@ func main() {
   s.Flag("team",     "Idonethis team"                         ).Envar("TODO_IDONETHIS_TEAM"    ).SetValue(&funcValue{ h.setTeam })
 	s.Arg("input",     "Filter by full line."                   ).StringVar(&h.line)
 
+  h = &Opts{ config: map[string]string{} }
+	c = a.Command("archive", "Archive done todo items."         ).Action(h.runArchive)
+	c.Flag("file",     "Todo.txt file to work with."            ).Short('f').StringVar(&h.path)
+	c.Flag("archive",  "File to archive to."                    ).Short('a').SetValue(&funcValue { h.setArchive })
+	c.Flag("format",   "Output format."                         ).Short('o').StringVar(&h.format)
+	c.Flag("before",   "Filter by done before."                 ).Short('b').SetValue(&funcValue{ h.setBefore })
+
   kingpin.MustParse(a.Parse(os.Args[1:]))
 }
 
 // For the sub-sub command `todo push [service]` i need to set config["service"]
 // as a PreAction.
 
-func setFunc(f func(string), name string) kingpin.Action {
+func setFunc(f func(string), value string) kingpin.Action {
   return func(p *kingpin.ParseContext) error {
-    f(name)
+    f(value)
     return nil
   }
 }

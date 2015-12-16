@@ -16,16 +16,12 @@ func (s *MemorySource) ReadLines() ([]string, error) {
   return strings.Split(s.content, "\n"), nil
 }
 
-func (s *MemorySource) MustReadLines() []string {
-  return mustReadLines(s)
-}
-
 func (s *MemorySource) WriteLines(lines []string) error {
   s.content = strings.Join(lines, "\n")
   return nil
 }
 
-func (s *MemorySource) MustWriteLines(lines []string) {
-  mustWriteLines(s, lines)
+func (s *MemorySource) AppendLines(lines []string) error {
+  s.content += strings.Join(lines, "\n")
+  return nil
 }
-
