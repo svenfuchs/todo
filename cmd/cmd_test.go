@@ -8,8 +8,8 @@ import (
 )
 
 func TestCmdListByIdFound(t *testing.T) {
-  in     := NewMemorySource("- foo [1]\nx bar [2]")
-  out    := NewMemorySource("")
+  in     := NewMemoryIo("- foo [1]\nx bar [2]")
+  out    := NewMemoryIo("")
   filter := Filter{ id: 1 }
   format := ""
 
@@ -21,8 +21,8 @@ func TestCmdListByIdFound(t *testing.T) {
 }
 
 func TestCmdListByTextFound(t *testing.T) {
-  in     := NewMemorySource("- foo [1]\nx bar [2]")
-  out    := NewMemorySource("")
+  in     := NewMemoryIo("- foo [1]\nx bar [2]")
+  out    := NewMemoryIo("")
   filter := Filter{ text: "bar" }
   format := ""
 
@@ -34,8 +34,8 @@ func TestCmdListByTextFound(t *testing.T) {
 }
 
 func TestCmdListByProjectsFound(t *testing.T) {
-  in     := NewMemorySource("- foo +baz [1]\nx bar +baz [2]")
-  out    := NewMemorySource("")
+  in     := NewMemoryIo("- foo +baz [1]\nx bar +baz [2]")
+  out    := NewMemoryIo("")
   filter := Filter{ projects: []string { "baz" } }
   format := ""
 
@@ -47,8 +47,8 @@ func TestCmdListByProjectsFound(t *testing.T) {
 }
 
 func TestCmdListFormat(t *testing.T) {
-  in     := NewMemorySource("- foo [1]\nx bar [2]")
-  out    := NewMemorySource("")
+  in     := NewMemoryIo("- foo [1]\nx bar [2]")
+  out    := NewMemoryIo("")
   filter := Filter{}
   format := "id,text"
 
@@ -61,8 +61,8 @@ func TestCmdListFormat(t *testing.T) {
 
 func TestCmdToggleByIdFound(t *testing.T) {
   now    := time.Now().Format("2006-01-02")
-  in     := NewMemorySource("# Comment\n- foo [1]\nx bar [2]")
-  out    := NewMemorySource("")
+  in     := NewMemoryIo("# Comment\n- foo [1]\nx bar [2]")
+  out    := NewMemoryIo("")
   filter := Filter{ id: 1 }
   format := ""
 
@@ -74,8 +74,8 @@ func TestCmdToggleByIdFound(t *testing.T) {
 }
 
 func TestCmdToggleByTextFound(t *testing.T) {
-  in     := NewMemorySource("# Comment\n- foo [1]\nx bar done:2015-12-13 [2]")
-  out    := NewMemorySource("")
+  in     := NewMemoryIo("# Comment\n- foo [1]\nx bar done:2015-12-13 [2]")
+  out    := NewMemoryIo("")
   filter := Filter{ text: "bar" }
   format := ""
 
@@ -88,8 +88,8 @@ func TestCmdToggleByTextFound(t *testing.T) {
 
 func TestCmdToggleByProjectsFound(t *testing.T) {
   now    := time.Now().Format("2006-01-02")
-  in     := NewMemorySource("- foo +baz [1]\nx bar +baz [2]")
-  out    := NewMemorySource("")
+  in     := NewMemoryIo("- foo +baz [1]\nx bar +baz [2]")
+  out    := NewMemoryIo("")
   filter := Filter{ projects: []string { "baz" } }
   format := ""
 

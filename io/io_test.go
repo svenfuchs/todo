@@ -1,4 +1,4 @@
-package source
+package io
 
 import (
   "io/ioutil"
@@ -33,14 +33,14 @@ func checkErr(err error) {
   }
 }
 
-func TestFileSourceReadLines(t *testing.T) {
-  actual, _ := NewFileSource(path).ReadLines()
+func TestFileIoReadLines(t *testing.T) {
+  actual, _ := NewIo(path).ReadLines()
   expected  := []string{ "- foo [1]", "x bar [2]" }
   AssertEqual(t, actual, expected)
 }
 
-func TestFileSourceWriteLines(t *testing.T) {
-  source := NewFileSource(path)
+func TestFileIoWriteLines(t *testing.T) {
+  source := NewIo(path)
   source.WriteLines([]string{ "- foo [1]", "x bar [2]" })
 
   actual, _ := source.ReadLines()

@@ -1,4 +1,4 @@
-package source
+package io
 
 import (
   "bufio"
@@ -6,11 +6,11 @@ import (
   "strings"
 )
 
-type FileSource struct {
+type FileIo struct {
   path string
 }
 
-func (s FileSource) ReadLines() ([]string, error) {
+func (s FileIo) ReadLines() ([]string, error) {
   io, err := os.Open(s.path)
   defer io.Close()
 
@@ -27,15 +27,15 @@ func (s FileSource) ReadLines() ([]string, error) {
   return lines, scanner.Err()
 }
 
-func (s FileSource) WriteLines(lines []string) error {
+func (s FileIo) WriteLines(lines []string) error {
   return s.doWriteLines(lines, os.O_TRUNC)
 }
 
-func (s FileSource) AppendLines(lines []string) error {
+func (s FileIo) AppendLines(lines []string) error {
   return s.doWriteLines(lines, os.O_APPEND)
 }
 
-func (s FileSource) doWriteLines(lines []string, mode int) error {
+func (s FileIo) doWriteLines(lines []string, mode int) error {
   if len(lines) == 0 { return nil }
   file, err := os.OpenFile(s.path, os.O_WRONLY | os.O_CREATE | mode, 0644)
   defer file.Close()

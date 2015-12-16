@@ -1,18 +1,18 @@
-package source
+package io
 
 // var stdin *os.File
 
-type Source interface {
+type Io interface {
   ReadLines() ([]string, error)
   WriteLines([]string) error
   AppendLines([]string) error
 }
 
-func NewSource(path string) Source {
+func NewIo(path string) Io {
   if path == "" {
-    return StdioSource{}
+    return StdIo{}
   } else {
-    return FileSource{ path: path }
+    return FileIo{ path: path }
   }
 }
 

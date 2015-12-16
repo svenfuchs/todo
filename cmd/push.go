@@ -4,14 +4,14 @@ import (
   "time"
   . "github.com/svenfuchs/todo"
   . "github.com/svenfuchs/todo/service"
-  . "github.com/svenfuchs/todo/source"
+  . "github.com/svenfuchs/todo/io"
 )
 
 
 func NewPushCmd(path string, filter Filter, format string, config map[string]string) PushCmd {
-  in  := NewSource(path)
-  out := NewSource("")
-  return PushCmd{ Cmd { in, out, filter, format }, config }
+  src := NewIo(path)
+  out := NewIo("")
+  return PushCmd{ Cmd { src, out, filter, format }, config }
 }
 
 type PushCmd struct {

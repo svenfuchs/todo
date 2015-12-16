@@ -2,13 +2,13 @@ package cmd
 
 import (
   . "github.com/svenfuchs/todo"
-  . "github.com/svenfuchs/todo/source"
+  . "github.com/svenfuchs/todo/io"
 )
 
 func NewListCmd(path string, filter Filter, format string) ListCmd {
-  in  := NewSource(path)
-  out := NewSource("")
-  return ListCmd{ Cmd { in, out, filter, format } }
+  src := NewIo(path)
+  out := NewIo("")
+  return ListCmd{ Cmd { src, out, filter, format } }
 }
 
 type ListCmd struct {

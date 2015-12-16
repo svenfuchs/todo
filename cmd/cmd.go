@@ -2,7 +2,7 @@ package cmd
 
 import (
   . "github.com/svenfuchs/todo"
-  . "github.com/svenfuchs/todo/source"
+  . "github.com/svenfuchs/todo/io"
 )
 
 type Runnable interface {
@@ -10,14 +10,14 @@ type Runnable interface {
 }
 
 type Cmd struct {
-  in Source
-  out Source
+  src Io
+  out Io
   filter Filter
   format string
 }
 
 func (c Cmd) list() List {
-  lines, _ := c.in.ReadLines()
+  lines, _ := c.src.ReadLines()
   list := ParseItemList(lines)
   return list
 }

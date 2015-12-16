@@ -1,4 +1,4 @@
-package source
+package io
 
 import (
   "bufio"
@@ -8,9 +8,9 @@ import (
 
 // var stdin *os.File
 
-type StdioSource struct{}
+type StdIo struct{}
 
-func (s StdioSource) ReadLines() ([]string, error) {
+func (s StdIo) ReadLines() ([]string, error) {
   lines   := []string{}
   scanner := bufio.NewScanner(os.Stdin)
 
@@ -20,13 +20,13 @@ func (s StdioSource) ReadLines() ([]string, error) {
   return lines, scanner.Err()
 }
 
-func (s StdioSource) WriteLines(lines []string) error {
+func (s StdIo) WriteLines(lines []string) error {
   if len(lines) == 0 { return nil }
   io := os.Stdout
   io.Write([]byte(strings.Join(lines, "\n") + "\n"))
   return nil
 }
 
-func (s StdioSource) AppendLines(lines []string) error {
+func (s StdIo) AppendLines(lines []string) error {
   return s.WriteLines(lines)
 }

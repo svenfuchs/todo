@@ -2,15 +2,15 @@ package cmd
 
 import (
   . "github.com/svenfuchs/todo"
-  . "github.com/svenfuchs/todo/source"
+  . "github.com/svenfuchs/todo/io"
 )
 
 
 func NewToggleCmd(path string, filter Filter) ToggleCmd {
-  in  := NewSource(path)
-  out := NewSource(path)
-  // out := NewFileSource("")
-  return ToggleCmd{ Cmd { in, out, filter, "full" } }
+  src := NewIo(path)
+  out := NewIo(path)
+  // out := NewFileIo("")
+  return ToggleCmd{ Cmd { src, out, filter, "full" } }
 }
 
 type ToggleCmd struct {
