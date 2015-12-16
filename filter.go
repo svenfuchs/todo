@@ -29,7 +29,7 @@ func (f Filter) Apply(i Item) bool {
   if i.IsNone() {
     return false
   } else if f.id != 0 {
-    return f.id == i.id
+    return f.id == i.Id
   } else {
     return f.matchesData(i)
   }
@@ -43,15 +43,15 @@ func (f Filter) matchesData(i Item) bool {
 }
 
 func (f Filter) matchesText(i Item) bool {
-  return f.text == "" || strings.Contains(i.text, f.text)
+  return f.text == "" || strings.Contains(i.Text, f.text)
 }
 
 func (f Filter) matchesStatus(i Item) bool {
-  return f.status == "" || f.status == i.status
+  return f.status == "" || f.status == i.Status
 }
 
 func (f Filter) matchesProjects(i Item) bool {
-  return len(f.projects) == 0  || len(intersect(i.projects, f.projects)) > 0
+  return len(f.projects) == 0  || len(intersect(i.Projects, f.projects)) > 0
 }
 
 func (f Filter) matchesDate(i Item) bool {
@@ -80,6 +80,10 @@ type FilterDate struct {
   mode string
 }
 
+func (d FilterDate) IsEmpty() bool {
+  return d.date == ""
+}
+
 func (d FilterDate) matches(date string) bool {
   modes := map[string][]int {
     "date":   []int { 0    },
@@ -91,7 +95,7 @@ func (d FilterDate) matches(date string) bool {
   cmp, ok := modes[d.mode]
   if !ok {
     return true
-  } else if date == "" {
+  } else if d.IsEmpty() {
     return false
   }
   return includes(cmp, strings.Compare(date, d.date))

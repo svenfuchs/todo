@@ -7,7 +7,7 @@ import (
 
 func TestListItems(t *testing.T) {
   items    := ParseItemList([]string{ "- foo" }).Items
-  actual   := items[0].status
+  actual   := items[0].Status
   expected := Pend
   AssertEqual(t, actual, expected)
 }
@@ -35,7 +35,7 @@ func TestListIds(t *testing.T) {
 // func TestListFindByIdFound(t *testing.T) {
 //   list     := ParseItemList([]string{ "# Comment", "- foo [1]", "x bar [2]" })
 //   item, _  := list.Find(Filter{ Id: 1 })
-//   actual   := item.text
+//   actual   := item.Text
 //   expected := "foo"
 //   AssertEqual(t, actual, expected)  }
 // }
@@ -51,7 +51,7 @@ func TestListIds(t *testing.T) {
 // func TestListFindByTextFound(t *testing.T) {
 //   list     := ParseItemList([]string{ "# Comment", "- fooooo [1]", "x bar [2]" })
 //   item, _  := list.Find(Filter{ Text: "foo" })
-//   actual   := item.text
+//   actual   := item.Text
 //   expected := "fooooo"
 //   AssertEqual(t, actual, expected)  }
 // }
@@ -75,13 +75,13 @@ func TestListIds(t *testing.T) {
 func TestListSelectById(t *testing.T) {
   list     := ParseItemList([]string{ "# Comment", "- foo [1]", "x bar [2]" })
   item     := list.Select(Filter{ id: 1 }).Items[0]
-  AssertEqual(t, item.text, "foo")
+  AssertEqual(t, item.Text, "foo")
 }
 
 func TestListSelectByTextFound(t *testing.T) {
   list     := ParseItemList([]string{ "# Comment", "- foo [1]", "x bar [2]" })
   item     := list.Select(Filter{ text: "fo" }).Items[0]
-  AssertEqual(t, item.text, "foo")
+  AssertEqual(t, item.Text, "foo")
 }
 
 func TestListRejectIf(t *testing.T) {
@@ -94,6 +94,6 @@ func TestListToggleFound(t *testing.T) {
   list := ParseItemList([]string{ "# Comment", "- foo [1]", "x bar [2]" })
   list  = list.Toggle(Filter{ text: "bar" })
   i    := list.Items[2]
-  AssertEqual(t, i.text, "bar")
-  AssertEqual(t, i.status, Pend)
+  AssertEqual(t, i.Text, "bar")
+  AssertEqual(t, i.Status, Pend)
 }

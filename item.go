@@ -17,23 +17,23 @@ func ParseItem(line string) Item {
 }
 
 type Item struct {
-  line     string
-  id       int
-  status   string
-  tags     map[string]string
-  text     string
-  projects []string
+  Line     string
+  Id       int
+  Status   string
+  Tags     map[string]string
+  Text     string
+  Projects []string
 }
 
 func (i Item) Toggle() (Item, error) {
-  switch i.status {
+  switch i.Status {
     case Pend:
-      i.status = Done
-      i.tags["done"] = time.Now().Format("2006-01-02")
+      i.Status = Done
+      i.Tags["done"] = time.Now().Format("2006-01-02")
       return i, nil
     case Done:
-      i.status = Pend
-      delete(i.tags, "done")
+      i.Status = Pend
+      delete(i.Tags, "done")
       return i, nil
     default:
       return i, errors.New("Cannot toggle an item that is not either pending or done.")
@@ -41,21 +41,21 @@ func (i Item) Toggle() (Item, error) {
 }
 
 func (i Item) IsDone() bool {
-  return i.status == Done
+  return i.Status == Done
 }
 
 func (i Item) IsPend() bool {
-  return i.status == Pend
+  return i.Status == Pend
 }
 
 func (i Item) IsNone() bool {
-  return i.status == None
+  return i.Status == None
 }
 
 func (i Item) DueDate() string {
-  return i.tags["due"]
+  return i.Tags["due"]
 }
 
 func (i Item) DoneDate() string {
-  return i.tags["done"]
+  return i.Tags["done"]
 }

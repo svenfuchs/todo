@@ -37,7 +37,7 @@ func (f Format) Apply(items []Item) []string {
 
 func (f Format) fmt(item Item) string {
   if item.IsNone() {
-    return item.line
+    return item.Line
   } else {
     return f.fmtItem(item)
   }
@@ -69,23 +69,23 @@ var statuses = map[string]string {
 }
 
 func fmtStatus(item Item) string {
-  return statuses[string(item.status)]
+  return statuses[string(item.Status)]
 }
 
 func fmtText(item Item) string {
-  return item.text
+  return item.Text
 }
 
 func fmtTags(item Item) string {
   var tags []string
-  for _, key := range sortedKeys(item.tags) {
-    tags = append(tags, fmt.Sprintf("%s:%s", key, item.tags[key]))
+  for _, key := range sortedKeys(item.Tags) {
+    tags = append(tags, fmt.Sprintf("%s:%s", key, item.Tags[key]))
   }
   return strings.Join(tags, " ")
 }
 
 func fmtId(item Item) string {
-  return fmt.Sprintf("[%d]", item.id)
+  return fmt.Sprintf("[%d]", item.Id)
 }
 
 func fmtDone(item Item) string {

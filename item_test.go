@@ -87,37 +87,37 @@ func TestItemDueDateMissing(t *testing.T) {
 func TestItemPendingToggleStatus(t *testing.T) {
   i := ParseItem("- foo")
   i, _ = i.Toggle()
-  AssertEqual(t, i.status, Done)
+  AssertEqual(t, i.Status, Done)
 }
 
 func TestItemPendingToggleText(t *testing.T) {
   i := ParseItem("- foo")
   i, _ = i.Toggle()
-  AssertEqual(t, i.text, "foo")
+  AssertEqual(t, i.Text, "foo")
 }
 
 func TestItemPendingToggleTagsDone(t *testing.T) {
   i := ParseItem("- foo")
   i, _ = i.Toggle()
-  AssertEqual(t, i.tags["done"], time.Now().Format("2006-01-02"))
+  AssertEqual(t, i.Tags["done"], time.Now().Format("2006-01-02"))
 }
 
 func TestItemDoneToggleStatus(t *testing.T) {
   i := ParseItem("x foo")
   i, _ = i.Toggle()
-  AssertEqual(t, i.status, Pend)
+  AssertEqual(t, i.Status, Pend)
 }
 
 func TestItemDoneToggleText(t *testing.T) {
   i := ParseItem("x foo")
   i, _ = i.Toggle()
-  AssertEqual(t, i.text, "foo")
+  AssertEqual(t, i.Text, "foo")
 }
 
 func TestItemDoneToggleTagsDone(t *testing.T) {
   i := ParseItem("x foo")
   i, _ = i.Toggle()
-  _, ok := i.tags["done"]
+  _, ok := i.Tags["done"]
   AssertFalse(t, ok)
 }
 

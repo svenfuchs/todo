@@ -13,8 +13,8 @@ func ParseItemList(lines []string) List {
 func maxId(items []Item) int {
   id := 0
   for _, item := range items {
-    if id < item.id {
-      id = item.id
+    if id < item.Id {
+      id = item.Id
     }
   }
   return id
@@ -37,7 +37,7 @@ func (l *List) Size() int {
 func (l *List) Ids() []int {
   ids := []int{}
   for _, item := range l.Items {
-    ids = append(ids, item.id)
+    ids = append(ids, item.Id)
   }
   return ids
 }
