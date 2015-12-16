@@ -30,8 +30,8 @@ func (c PushCmd) Run() {
   c.output(list, "full")
 }
 
-func (c PushCmd) service(config map[string]string) Idonethis {
-  var service Idonethis
+func (c PushCmd) service(config map[string]string) Service {
+  var service Service
   switch config["service"] {
     case "idonethis":
       after := time.Now().AddDate(0, 0, -1).Format("2006-01-02")
@@ -40,15 +40,15 @@ func (c PushCmd) service(config map[string]string) Idonethis {
   return service
 }
 
-func (c PushCmd) push(list List, service Idonethis) {
+func (c PushCmd) push(list List, service Service) {
   for _, item := range list.Items {
     service.Push(item.Line) // TODO report error
   }
 }
 
-func (c PushCmd) ids(service Idonethis) ([]int, error) {
+func (c PushCmd) ids(service Service) ([]int, error) {
   var ids []int
-  lines, err := service.Lines()
+  lines, err := service.Fetch()
   if err != nil { return ids, err }
 
   for _, line := range lines {

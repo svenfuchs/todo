@@ -26,10 +26,12 @@ func (s Idonethis) Push(line string) error {
   return err
 }
 
-func (s Idonethis) Lines() ([]string, error) {
+func (s Idonethis) Fetch() ([]string, error) {
   var lines []string
-  page, err := s.fetch()
+
+  body, err := s.get()
   if err != nil { return lines, err }
+  page := s.decode(body)
 
   for _, done := range page.Results {
     lines = append(lines, done.Raw_text)
@@ -37,13 +39,7 @@ func (s Idonethis) Lines() ([]string, error) {
   return lines, nil
 }
 
-func (s Idonethis) fetch() (api.Page, error) {
-  body, err := s.get()
-  if err != nil { return api.Page{}, err }
-  return s.decode(body), nil
-}
-
-func (s Idonethis) decode(body []byte) api.Page { //  (string, error)
+func (s Idonethis) decode(body []byte) api.Page {
   var page api.Page
   json.Unmarshal(body, &page)
   return page
