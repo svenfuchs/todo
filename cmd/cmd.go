@@ -2,6 +2,7 @@ package cmd
 
 import (
   . "github.com/svenfuchs/todo"
+  . "github.com/svenfuchs/todo/source"
 )
 
 type Runnable interface {

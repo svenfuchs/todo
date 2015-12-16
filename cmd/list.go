@@ -2,11 +2,12 @@ package cmd
 
 import (
   . "github.com/svenfuchs/todo"
+  . "github.com/svenfuchs/todo/source"
 )
 
 func NewListCmd(path string, filter Filter, format string) ListCmd {
-  in  := NewFileSource(path)
-  out := NewFileSource("")
+  in  := NewSource(path)
+  out := NewSource("")
   return ListCmd{ Cmd { in, out, filter, format } }
 }
 

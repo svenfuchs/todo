@@ -2,12 +2,13 @@ package cmd
 
 import (
   . "github.com/svenfuchs/todo"
+  . "github.com/svenfuchs/todo/source"
 )
 
 
 func NewToggleCmd(path string, filter Filter) ToggleCmd {
-  in  := NewFileSource(path)
-  out := NewFileSource(path)
+  in  := NewSource(path)
+  out := NewSource(path)
   // out := NewFileSource("")
   return ToggleCmd{ Cmd { in, out, filter, "full" } }
 }

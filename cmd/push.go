@@ -4,12 +4,13 @@ import (
   "time"
   . "github.com/svenfuchs/todo"
   . "github.com/svenfuchs/todo/service"
+  . "github.com/svenfuchs/todo/source"
 )
 
 
 func NewPushCmd(path string, filter Filter, config map[string]string) PushCmd {
-  in  := NewFileSource(path)
-  out := NewFileSource("")
+  in  := NewSource(path)
+  out := NewSource("")
   return PushCmd{ Cmd { in, out, filter, "full" }, config }
 }
 
