@@ -85,20 +85,19 @@ func (d FilterDate) IsEmpty() bool {
 }
 
 func (d FilterDate) matches(date string) bool {
-  modes := map[string][]int {
-    "date":   []int { 0    },
-    "after":  []int { 1    },
-    "since":  []int { 0, 1 },
-    "before": []int { -1   },
-  }
-
-  cmp, ok := modes[d.mode]
-  if !ok {
+  if d.date == "" {
     return true
-  } else if d.IsEmpty() {
+  } else if date == "" {
     return false
   }
-  return includes(cmp, strings.Compare(date, d.date))
+
+  cmp := strings.Compare(date, d.date)
+  switch d.mode {
+    case "after":  return cmp == 1
+    case "since":  return cmp == 0 || cmp == 1
+    case "before": return cmp == -1
+    default:       return cmp == 0
+  }
 }
 
 func intersect(strs1 []string, strs2 []string) []string {

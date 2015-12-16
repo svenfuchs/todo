@@ -1,12 +1,10 @@
 package cmd
 
 import (
-  // "fmt"
   . "github.com/svenfuchs/todo"
   . "github.com/svenfuchs/todo/io"
 )
 
-// rename c.in to c.src
 // make Filter work with arrays on each field, remove list.RejectIf
 
 func NewArchiveCmd(path string, filter Filter, format string, config map[string]string) ArchiveCmd {
