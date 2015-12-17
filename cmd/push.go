@@ -8,36 +8,31 @@ import (
 )
 
 
-func NewPushCmd(path string, filter Filter, format string, config map[string]string) Runnable {
-  filter.Status = Done
-  if filter.Date.IsEmpty() {
-    filter.Date = NewFilterDate("since:yesterday")
+func NewPushCmd(args *Args) Runnable {
+  args.Status = Done
+  if args.Date == "" {
+    args.Date = "since:yesterday"
   }
 
-  if format == "" {
-    format = "full"
-  }
-
-  src := NewIo(path)
+  src := NewIo(args.Path)
   out := NewIo("")
-  return PushCmd{ Cmd { src, out, filter, format }, config }
+  return PushCmd{ Cmd { args, src, out } }
 }
 
 type PushCmd struct {
   Cmd
-  config map[string]string
 }
 
 func (c PushCmd) Run() {
-  service := c.service(c.config)
+  service := c.service(c.args.Config)
   ids, _  := c.ids(service) // TODO report error
 
   list := c.list()
-  list = list.Select(c.filter)
+  list = list.Select(c.filter())
   list = list.Reject(Filter{ Ids: ids })
 
   c.push(list, service)
-  c.write(c.out, list, c.format)
+  c.write(c.out, list)
 }
 
 func (c PushCmd) service(config map[string]string) Service {

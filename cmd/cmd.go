@@ -10,10 +10,9 @@ type Runnable interface {
 }
 
 type Cmd struct {
+  args *Args
   src Io
   out Io
-  filter Filter
-  format string
 }
 
 func (c Cmd) list() List {
@@ -22,21 +21,24 @@ func (c Cmd) list() List {
   return list
 }
 
-func (c Cmd) write(io Io, list List, format string) {
-  lines := c.formatted(list.Items, format)
+func (c Cmd) write(io Io, list List) {
+  lines := c.formatted(list.Items)
   io.WriteLines(lines)
 }
 
-func (c Cmd) append(io Io, list List, format string) {
-  lines := c.formatted(list.Items, format)
+func (c Cmd) append(io Io, list List) {
+  lines := c.formatted(list.Items)
   io.AppendLines(lines)
 }
 
-func (c Cmd) formatted(items []Item, format string) []string {
+func (c Cmd) formatted(items []Item) []string {
+  format := c.args.Format
   if format == "" {
     format = "full"
   }
   return NewFormat(format).Apply(items)
 }
 
-
+func (c Cmd) filter() Filter {
+  return NewFilter(c.args.Ids, c.args.Status, c.args.Text, c.args.Projects, c.args.Date)
+}

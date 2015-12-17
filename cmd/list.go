@@ -1,18 +1,13 @@
 package cmd
 
 import (
-  . "github.com/svenfuchs/todo"
   . "github.com/svenfuchs/todo/io"
 )
 
-func NewListCmd(path string, filter Filter, format string, config map[string]string) Runnable {
-  if format == "" {
-    format = "full"
-  }
-
-  src := NewIo(path)
+func NewListCmd(args *Args) Runnable {
+  src := NewIo(args.Path)
   out := NewIo("")
-  return ListCmd{ Cmd { src, out, filter, format } }
+  return ListCmd{ Cmd { args, src, out } }
 }
 
 type ListCmd struct {
@@ -21,7 +16,6 @@ type ListCmd struct {
 
 func (c ListCmd) Run() {
   list := c.list()
-  list = list.Select(c.filter)
-  c.write(c.out, list, c.format)
+  list = list.Select(c.filter())
+  c.write(c.out, list)
 }
-

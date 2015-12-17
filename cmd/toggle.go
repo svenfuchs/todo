@@ -1,15 +1,15 @@
 package cmd
 
 import (
-  . "github.com/svenfuchs/todo"
   . "github.com/svenfuchs/todo/io"
 )
 
 
-func NewToggleCmd(path string, filter Filter, format string, config map[string]string) Runnable {
-  src := NewIo(path)
+func NewToggleCmd(args *Args) Runnable {
+  args.Format = "full"
+  src := NewIo(args.Path)
   out := NewIo("")
-  return ToggleCmd{ Cmd { src, out, filter, "full" } }
+  return ToggleCmd{ Cmd { args, src, out } }
 }
 
 type ToggleCmd struct {
@@ -18,8 +18,8 @@ type ToggleCmd struct {
 
 func (c ToggleCmd) Run() {
   list := c.list()
-  selected := list.Toggle(c.filter)
-  c.write(c.out, selected, c.format)
-  c.write(c.src, list, c.format)
+  selected := list.Toggle(c.filter())
+  c.write(c.out, selected)
+  c.write(c.src, list)
 }
 
