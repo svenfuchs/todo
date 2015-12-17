@@ -5,9 +5,8 @@ import (
   . "github.com/svenfuchs/todo/io"
 )
 
-func NewListCmd(path string, filter Filter, opts map[string]string, config map[string]string) ListCmd {
-  format, ok := opts["format"]
-  if !ok {
+func NewListCmd(path string, filter Filter, format string, config map[string]string) Runnable {
+  if format == "" {
     format = "full"
   }
 

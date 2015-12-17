@@ -5,19 +5,19 @@ import (
   "github.com/svenfuchs/todo/date"
 )
 
-func NewFilter(ids []int, status string, text string, projects []string, date FilterDate) Filter {
+func NewFilter(ids []int, status string, text string, projects []string, date string) Filter {
   if len(status) > 4 {
     status = status[0:4]
   }
   if len(ids) == 1 && ids[0] == 0 {
     ids = []int {}
   }
-  return Filter{ ids, status, text, projects, date }
+  return Filter{ ids, status, text, projects, NewFilterDate(date) }
 }
 
 func ParseFilter(line string) Filter {
   p := NewParser(line)
-  return NewFilter([]int{ p.Id() }, p.Status(), p.Text(), []string{}, FilterDate{})
+  return NewFilter([]int{ p.Id() }, p.Status(), p.Text(), []string{}, "")
 }
 
 type Filter struct {
@@ -79,13 +79,17 @@ func (f Filter) statusDate(i Item) string {
   return i.DoneDate()
 }
 
-func NewFilterDate(date string, mode string) FilterDate {
-  return FilterDate{ date, mode }
+func NewFilterDate(date string) FilterDate {
+  if date == "" {
+    date = ":"
+  }
+  parts := strings.SplitN(date, ":", 2)
+  return FilterDate{ parts[0], parts[1] }
 }
 
 type FilterDate struct {
-  date string
   mode string
+  date string
 }
 
 func (d FilterDate) IsEmpty() bool {

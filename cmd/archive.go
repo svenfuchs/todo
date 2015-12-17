@@ -5,14 +5,13 @@ import (
   . "github.com/svenfuchs/todo/io"
 )
 
-func NewArchiveCmd(path string, filter Filter, opts map[string]string, config map[string]string) ArchiveCmd {
+func NewArchiveCmd(path string, filter Filter, format string, config map[string]string) Runnable {
   filter.Status = Done
   if filter.Date.IsEmpty() {
-    filter.Date = NewFilterDate("two weeks ago", "before")
+    filter.Date = NewFilterDate("before:two weeks ago")
   }
 
-  format, ok := opts["format"]
-  if !ok {
+  if format == "" {
     format = "full"
   }
 

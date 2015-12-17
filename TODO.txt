@@ -1,2 +1,4 @@
+- Fix line not being respected
 - Add list sorting
 - Use log, fix error reporting TODOs
+

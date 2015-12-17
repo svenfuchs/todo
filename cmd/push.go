@@ -8,14 +8,13 @@ import (
 )
 
 
-func NewPushCmd(path string, filter Filter, opts map[string]string, config map[string]string) PushCmd {
+func NewPushCmd(path string, filter Filter, format string, config map[string]string) Runnable {
   filter.Status = Done
   if filter.Date.IsEmpty() {
-    filter.Date = NewFilterDate("yesterday", "since")
+    filter.Date = NewFilterDate("since:yesterday")
   }
 
-  format, ok := opts["format"]
-  if !ok {
+  if format == "" {
     format = "full"
   }
 
