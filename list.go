@@ -64,11 +64,11 @@ func (l *List) Reject(filter Filter) List {
 
 func (l *List) Toggle(filter Filter) List {
   items := []Item{}
-  for _, item := range l.Items {
-    if filter.Apply(item) {
-      item, _ = item.Toggle()
+  for i, _ := range l.Items {
+    item := &l.Items[i]
+    if filter.Apply(*item) {
+      items = append(items, *item.Toggle())
     }
-    items = append(items, item)
   }
   return List{ Items: items, nextId: l.nextId }
 }

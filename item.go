@@ -1,7 +1,6 @@
 package todo
 
 import (
-  "errors"
   "time"
 )
 
@@ -25,19 +24,25 @@ type Item struct {
   Projects []string
 }
 
-func (i Item) Toggle() (Item, error) {
-  switch i.Status {
-    case Pend:
-      i.Status = Done
-      i.Tags["done"] = time.Now().Format("2006-01-02")
-      return i, nil
-    case Done:
-      i.Status = Pend
-      delete(i.Tags, "done")
-      return i, nil
-    default:
-      return i, errors.New("Cannot toggle an item that is not either pending or done.")
+func (i *Item) Toggle() *Item {
+  if i.Status == Pend {
+    i.setDone()
+  } else {
+    i.setPend()
   }
+  return i
+}
+
+func (i *Item) setPend() {
+  i.Status = Pend
+  delete(i.Tags, "done")
+  i.setLine()
+}
+
+func (i *Item) setDone() {
+  i.Status = Done
+  i.Tags["done"] = time.Now().Format("2006-01-02")
+  i.setLine()
 }
 
 func (i Item) IsDone() bool {
@@ -58,4 +63,8 @@ func (i Item) DueDate() string {
 
 func (i Item) DoneDate() string {
   return i.Tags["done"]
+}
+
+func (i *Item) setLine() {
+  i.Line = NewFormat("full").Apply([]Item { *i })[0] // TODO
 }

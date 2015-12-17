@@ -1,0 +1,2 @@
+- Add list sorting
+- Use log, fix error reporting TODOs
