@@ -1,7 +1,7 @@
 package cmd
 
 import (
-  . "github.com/svenfuchs/todo"
+  . "github.com/svenfuchs/todo/data"
   . "github.com/svenfuchs/todo/io"
 )
 

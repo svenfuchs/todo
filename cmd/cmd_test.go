@@ -4,7 +4,7 @@ import (
   "fmt"
   "testing"
   "time"
-  . "github.com/svenfuchs/todo"
+  . "github.com/svenfuchs/todo/data"
   . "github.com/svenfuchs/todo/io"
   . "github.com/svenfuchs/todo/test"
 )
@@ -15,7 +15,7 @@ func TestCmdListByIdFound(t *testing.T) {
   filter := Filter{ Ids: []int{ 1 } }
   format := ""
 
-  ListCmd { Cmd { &in, &out, filter, format } }.Run()
+  ListCmd { Cmd { in, out, filter, format } }.Run()
   actual, _ := out.ReadLines()
   expected := []string{ "- foo" }
 
@@ -28,7 +28,7 @@ func TestCmdListByTextFound(t *testing.T) {
   filter := Filter{ Text: "bar" }
   format := ""
 
-  ListCmd { Cmd { &in, &out, filter, format } }.Run()
+  ListCmd { Cmd { in, out, filter, format } }.Run()
   actual, _ := out.ReadLines()
   expected  := []string{ "x bar" }
 
@@ -41,7 +41,7 @@ func TestCmdListByProjectsFound(t *testing.T) {
   filter := Filter{ Projects: []string { "baz" } }
   format := ""
 
-  ListCmd { Cmd { &in, &out, filter, format } }.Run()
+  ListCmd { Cmd { in, out, filter, format } }.Run()
   actual, _ := out.ReadLines()
   expected  := []string{ "- foo +baz", "x bar +baz" }
 
@@ -54,7 +54,7 @@ func TestCmdListFormat(t *testing.T) {
   filter := Filter{}
   format := "id,text"
 
-  ListCmd { Cmd { &in, &out, filter, format } }.Run()
+  ListCmd { Cmd { in, out, filter, format } }.Run()
   actual, _ := out.ReadLines()
   expected  := []string{ "[1] foo", "[2] bar" }
 
@@ -68,7 +68,7 @@ func TestCmdToggleByIdFound(t *testing.T) {
   filter := Filter{ Ids: []int { 1 } }
   format := ""
 
-  ToggleCmd { Cmd { &in, &out, filter, format } }.Run()
+  ToggleCmd { Cmd { in, out, filter, format } }.Run()
   actual, _ := out.ReadLines()
   expected := []string{ "# Comment", fmt.Sprintf("x foo done:%s [1]", now), "x bar [2]" }
 
@@ -81,7 +81,7 @@ func TestCmdToggleByTextFound(t *testing.T) {
   filter := Filter{ Text: "bar" }
   format := ""
 
-  ToggleCmd { Cmd { &in, &out, filter, format } }.Run()
+  ToggleCmd { Cmd { in, out, filter, format } }.Run()
   actual, _ := out.ReadLines()
   expected := []string{ "# Comment", "- foo [1]", "- bar [2]" }
 
@@ -95,7 +95,7 @@ func TestCmdToggleByProjectsFound(t *testing.T) {
   filter := Filter{ Projects: []string { "baz" } }
   format := ""
 
-  ToggleCmd { Cmd { &in, &out, filter, format } }.Run()
+  ToggleCmd { Cmd { in, out, filter, format } }.Run()
   actual, _ := out.ReadLines()
   expected := []string{ fmt.Sprintf("x foo +baz done:%s [1]", now), "- bar +baz [2]" }
 
