@@ -5,7 +5,12 @@ import (
   . "github.com/svenfuchs/todo/io"
 )
 
-func NewListCmd(path string, filter Filter, format string) ListCmd {
+func NewListCmd(path string, filter Filter, opts map[string]string, config map[string]string) ListCmd {
+  format, ok := opts["format"]
+  if !ok {
+    format = "full"
+  }
+
   src := NewIo(path)
   out := NewIo("")
   return ListCmd{ Cmd { src, out, filter, format } }

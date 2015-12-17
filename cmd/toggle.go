@@ -6,7 +6,7 @@ import (
 )
 
 
-func NewToggleCmd(path string, filter Filter) ToggleCmd {
+func NewToggleCmd(path string, filter Filter, opts map[string]string, config map[string]string) ToggleCmd {
   src := NewIo(path)
   out := NewIo("")
   return ToggleCmd{ Cmd { src, out, filter, "full" } }

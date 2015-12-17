@@ -5,7 +5,17 @@ import (
   . "github.com/svenfuchs/todo/io"
 )
 
-func NewArchiveCmd(path string, filter Filter, format string, config map[string]string) ArchiveCmd {
+func NewArchiveCmd(path string, filter Filter, opts map[string]string, config map[string]string) ArchiveCmd {
+  filter.Status = Done
+  if filter.Date.IsEmpty() {
+    filter.Date = NewFilterDate("two weeks ago", "before")
+  }
+
+  format, ok := opts["format"]
+  if !ok {
+    format = "full"
+  }
+
   src := NewIo(path)
   out := NewIo("")
   archive := NewIo(config["archive"])

@@ -16,6 +16,7 @@ type Opts struct {
   text string
   projects []string
   date FilterDate
+  opts   map[string]string
   config map[string]string
 }
 
@@ -28,6 +29,8 @@ func (o *Opts) setBefore(date string)   { o.date = NewFilterDate(date, "before")
 func (o *Opts) setSince(date string)    { o.date = NewFilterDate(date, "since")  }
 func (o *Opts) setAfter(date string)    { o.date = NewFilterDate(date, "after")  }
 
+func (o *Opts) setFormat(value string)  { o.opts["format"] = value }
+
 func (o *Opts) setUser(value string)    { o.config["username"] = value }
 func (o *Opts) setToken(value string)   { o.config["token"] = value }
 func (o *Opts) setTeam(value string)    { o.config["team"] = value }
@@ -35,46 +38,32 @@ func (o *Opts) setService(value string) { o.config["service"] = value }
 func (o *Opts) setArchive(value string) { o.config["archive"] = value }
 
 func (o *Opts) runList(c *kingpin.ParseContext) error {
-  NewListCmd(o.path, o.filter(), o.format).Run()
+  NewListCmd(o.path, o.filter(), o.opts, o.config).Run()
 	return nil
 }
 
 func (o *Opts) runToggle(c *kingpin.ParseContext) error {
-  NewToggleCmd(o.path, o.filter()).Run()
+  NewToggleCmd(o.path, o.filter(), o.opts, o.config).Run()
 	return nil
 }
 
 func (o *Opts) runPush(c *kingpin.ParseContext) error {
-  o.status = Done
-  if o.date.IsEmpty() {
-    o.date = NewFilterDate("yesterday", "since")
-  }
-  if o.format == "" {
-    o.format = "full"
-  }
-  NewPushCmd(o.path, o.filter(), o.format, o.config).Run()
+  NewPushCmd(o.path, o.filter(), o.opts, o.config).Run()
 	return nil
 }
 
 func (o *Opts) runArchive(c *kingpin.ParseContext) error {
-  o.status = Done
-  if o.date.IsEmpty() {
-    o.date = NewFilterDate("two weeks ago", "before")
-  }
-  if o.format == "" {
-    o.format = "full"
-  }
-  NewArchiveCmd(o.path, o.filter(), o.format, o.config).Run()
+  NewArchiveCmd(o.path, o.filter(), o.opts, o.config).Run()
 	return nil
 }
 
 func main() {
   a := kingpin.New("todo", "A command-line todo.txt tool.")
 
-	h := &Opts{}
+  h := &Opts{ opts: map[string]string{}, config: map[string]string{} }
 	c := a.Command("list", "Filter and list todo items."        ).Action(h.runList)
 	c.Flag("file",     "Todo.txt file to work with."            ).Short('f').StringVar(&h.path)
-	c.Flag("format",   "Output format."                         ).Short('o').StringVar(&h.format)
+	c.Flag("format",   "Output format."                         ).Short('o').SetValue(&funcValue{ h.setFormat })
 	c.Flag("id",       "Filter by id."                          ).Short('i').IntVar(&h.id)
 	c.Flag("status",   "Filter by status."                      ).Short('s').StringVar(&h.status)
 	c.Flag("text",     "Filter by text."                        ).Short('t').StringVar(&h.text)
@@ -85,7 +74,7 @@ func main() {
 	c.Flag("before",   "Filter by done before."                 ).Short('b').SetValue(&funcValue{ h.setBefore })
 	c.Arg("input",     "Filter by full line."                   ).StringVar(&h.line)
 
-	h = &Opts{}
+  h = &Opts{ opts: map[string]string{}, config: map[string]string{} }
 	c = a.Command("toggle", "Toggle todo items."                ).Action(h.runToggle)
 	c.Flag("file",     "Todo.txt file to work with."            ).Short('f').StringVar(&h.path)
 	c.Flag("id",       "Filter by id."                          ).Short('i').IntVar(&h.id)
@@ -98,7 +87,7 @@ func main() {
 	c.Flag("before",   "Filter by done before."                 ).Short('b').SetValue(&funcValue{ h.setBefore })
 	c.Arg("input",     "Filter by full line."                   ).StringVar(&h.line)
 
-  h = &Opts{ config: map[string]string{} }
+  h = &Opts{ opts: map[string]string{}, config: map[string]string{} }
 	c = a.Command("push", "Push todo items.")
 	c.Flag("file",     "Todo.txt file to work with."            ).Short('f').StringVar(&h.path)
 	c.Flag("format",   "Output format."                         ).Short('o').StringVar(&h.format)
@@ -112,7 +101,7 @@ func main() {
   s.Flag("team",     "Idonethis team"                         ).Envar("TODO_IDONETHIS_TEAM"    ).SetValue(&funcValue{ h.setTeam })
 	s.Arg("input",     "Filter by full line."                   ).StringVar(&h.line)
 
-  h = &Opts{ config: map[string]string{} }
+  h = &Opts{ opts: map[string]string{}, config: map[string]string{} }
 	c = a.Command("archive", "Archive done todo items."         ).Action(h.runArchive)
 	c.Flag("file",     "Todo.txt file to work with."            ).Short('f').StringVar(&h.path)
 	c.Flag("archive",  "File to archive to."                    ).Short('a').SetValue(&funcValue { h.setArchive })

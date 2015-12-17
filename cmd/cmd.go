@@ -33,6 +33,9 @@ func (c Cmd) append(io Io, list List, format string) {
 }
 
 func (c Cmd) formatted(items []Item, format string) []string {
+  if format == "" {
+    format = "full"
+  }
   return NewFormat(format).Apply(items)
 }
 

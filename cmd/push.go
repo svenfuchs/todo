@@ -8,7 +8,17 @@ import (
 )
 
 
-func NewPushCmd(path string, filter Filter, format string, config map[string]string) PushCmd {
+func NewPushCmd(path string, filter Filter, opts map[string]string, config map[string]string) PushCmd {
+  filter.Status = Done
+  if filter.Date.IsEmpty() {
+    filter.Date = NewFilterDate("yesterday", "since")
+  }
+
+  format, ok := opts["format"]
+  if !ok {
+    format = "full"
+  }
+
   src := NewIo(path)
   out := NewIo("")
   return PushCmd{ Cmd { src, out, filter, format }, config }
@@ -28,7 +38,7 @@ func (c PushCmd) Run() {
   list = list.Reject(Filter{ Ids: ids })
 
   c.push(list, service)
-  c.write(c.out, list, "full")
+  c.write(c.out, list, c.format)
 }
 
 func (c PushCmd) service(config map[string]string) Service {
@@ -43,7 +53,7 @@ func (c PushCmd) service(config map[string]string) Service {
 
 func (c PushCmd) push(list List, service Service) {
   for _, item := range list.Items {
-    service.Push(item.Line) // TODO report error
+    service.Push(item.Line) // TODO report error, use format
   }
 }
 
