@@ -15,7 +15,7 @@ var (
   ago   = regexp.MustCompile(fmt.Sprintf("^(%s)%s(%s)s?%s(ago|ahead)$", rjoin(nums), sep, rjoin(units), sep))
 )
 
-func byDistance(str string, t Clock) (time.Time, error) {
+func ByDistance(str string, t Clock) (time.Time, error) {
   match := ago.FindAllStringSubmatch(str, -1)
   if match == nil {
     return t.Now(), errors.New(fmt.Sprintf("Not a known date expression: %s", str))

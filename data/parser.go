@@ -46,15 +46,15 @@ func (p Parser) Status() string {
 func (p Parser) Tags() map[string]string {
   tags := map[string]string{}
   for _, match := range patterns["tags"].FindAllStringSubmatch(p.Line, -1) {
-    tags[match[1]] = date.Normalize(match[2], date.Time)
+    tags[match[1]] = date.Normalize(match[2])
   }
   return tags
 }
 
 func (p Parser) Text() string {
   text := p.Line
-  for _, pattern := range patterns {
-    text = pattern.ReplaceAllString(text, "")
+  for _, key := range []string{ "status", "id", "tags" } {
+    text = patterns[key].ReplaceAllString(text, "")
   }
   return strings.TrimSpace(text)
 }

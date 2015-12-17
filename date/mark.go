@@ -16,7 +16,7 @@ var (
   wday   = regexp.MustCompile(fmt.Sprintf("^(last|next)%s(%s)[^\b]*$", sep, rjoin(wdays)))
 )
 
-func byMark(str string, t Clock) (time.Time, error) {
+func ByMark(str string, t Clock) (time.Time, error) {
   steps := map[string]int { "last": -1, "next": 1 }
 
   match := year.FindAllStringSubmatch(str, -1)

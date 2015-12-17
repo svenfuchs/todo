@@ -13,7 +13,7 @@ var (
 )
 
 func TestDateNamedToday(t *testing.T) {
-  actual   := date.Normalize("today", date.Stub(today))
+  actual   := date.Normalize("today")
   expected := today
 
   if !reflect.DeepEqual(actual, expected) {
@@ -22,7 +22,7 @@ func TestDateNamedToday(t *testing.T) {
 }
 
 func TestDateNamedYesterday(t *testing.T) {
-  actual   := date.Normalize("yesterday", date.Stub(today))
+  actual   := date.Normalize("yesterday")
   expected := yesterday
 
   if !reflect.DeepEqual(actual, expected) {
@@ -31,7 +31,7 @@ func TestDateNamedYesterday(t *testing.T) {
 }
 
 func TestDateNamedTomorrow(t *testing.T) {
-  actual   := date.Normalize("tomorrow", date.Stub(today))
+  actual   := date.Normalize("tomorrow")
   expected := tomorrow
 
   if !reflect.DeepEqual(actual, expected) {

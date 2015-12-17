@@ -20,7 +20,7 @@ func TestListNextId(t *testing.T) {
 
 func TestListSize(t *testing.T) {
   list     := ParseItemList([]string{ "- foo", "+ bar" })
-  actual   := list.Size()
+  actual   := len(list.Items)
   expected := 2
   AssertEqual(t, actual, expected)
 }
@@ -50,10 +50,10 @@ func TestListReject(t *testing.T) {
   AssertEqual(t, len(items), 2)
 }
 
-func TestListToggleFound(t *testing.T) {
-  list := ParseItemList([]string{ "# Comment", "- foo [1]", "x bar [2]" })
-  list  = list.Toggle(Filter{ Text: "bar" })
-  i    := list.Items[2]
-  AssertEqual(t, i.Text, "bar")
-  AssertEqual(t, i.Status, Pend)
-}
+// func TestListToggleFound(t *testing.T) {
+//   list := ParseItemList([]string{ "# Comment", "- foo [1]", "x bar [2]" })
+//   list  = list.Toggle(Filter{ Text: "bar" })
+//   i    := list.Items[2]
+//   AssertEqual(t, i.Text, "bar")
+//   AssertEqual(t, i.Status, Pend)
+// }

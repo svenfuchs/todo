@@ -113,7 +113,7 @@ func (d FilterDate) matches(date string) bool {
 }
 
 func normalizeDate(str string) string {
-  return date.Normalize(str, date.Time)
+  return date.Normalize(str)
 }
 
 func intersect(strs1 []string, strs2 []string) []string {

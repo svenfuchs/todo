@@ -26,7 +26,7 @@ var (
 )
 
 func TestDateDistanceTwoYearsAgo(t *testing.T) {
-  actual   := date.Normalize("two years ago", date.Stub(today))
+  actual   := date.Normalize("two years ago")
   expected := two_years_ago
 
   if !reflect.DeepEqual(actual, expected) {
@@ -35,7 +35,7 @@ func TestDateDistanceTwoYearsAgo(t *testing.T) {
 }
 
 func TestDateDistanceOneYearAgo(t *testing.T) {
-  actual   := date.Normalize("one year ago", date.Stub(today))
+  actual   := date.Normalize("one year ago")
   expected := one_year_ago
 
   if !reflect.DeepEqual(actual, expected) {
@@ -44,7 +44,7 @@ func TestDateDistanceOneYearAgo(t *testing.T) {
 }
 
 func TestDateDistanceTwoMonthsAgo(t *testing.T) {
-  actual   := date.Normalize("two months ago", date.Stub(today))
+  actual   := date.Normalize("two months ago")
   expected := two_months_ago
 
   if !reflect.DeepEqual(actual, expected) {
@@ -53,7 +53,7 @@ func TestDateDistanceTwoMonthsAgo(t *testing.T) {
 }
 
 func TestDateDistanceOneMonthAgo(t *testing.T) {
-  actual   := date.Normalize("one month ago", date.Stub(today))
+  actual   := date.Normalize("one month ago")
   expected := one_month_ago
 
   if !reflect.DeepEqual(actual, expected) {
@@ -62,7 +62,7 @@ func TestDateDistanceOneMonthAgo(t *testing.T) {
 }
 
 func TestDateDistanceTwoWeeksAgo(t *testing.T) {
-  actual   := date.Normalize("two weeks ago", date.Stub(today))
+  actual   := date.Normalize("two weeks ago")
   expected := two_weeks_ago
 
   if !reflect.DeepEqual(actual, expected) {
@@ -71,7 +71,7 @@ func TestDateDistanceTwoWeeksAgo(t *testing.T) {
 }
 
 func TestDateDistanceOneWeekAgo(t *testing.T) {
-  actual   := date.Normalize("one week ago", date.Stub(today))
+  actual   := date.Normalize("one week ago")
   expected := one_week_ago
 
   if !reflect.DeepEqual(actual, expected) {
@@ -80,7 +80,7 @@ func TestDateDistanceOneWeekAgo(t *testing.T) {
 }
 
 func TestDateDistanceTwoDaysAgo(t *testing.T) {
-  actual   := date.Normalize("two days ago", date.Stub(today))
+  actual   := date.Normalize("two days ago")
   expected := two_days_ago
 
   if !reflect.DeepEqual(actual, expected) {
@@ -89,7 +89,7 @@ func TestDateDistanceTwoDaysAgo(t *testing.T) {
 }
 
 func TestDateDistanceOneDayAgo(t *testing.T) {
-  actual   := date.Normalize("one day ago", date.Stub(today))
+  actual   := date.Normalize("one day ago")
   expected := one_day_ago
 
   if !reflect.DeepEqual(actual, expected) {
@@ -99,7 +99,7 @@ func TestDateDistanceOneDayAgo(t *testing.T) {
 
 
 func TestDateDistanceOneDayAhead(t *testing.T) {
-  actual   := date.Normalize("one day ahead", date.Stub(today))
+  actual   := date.Normalize("one day ahead")
   expected := one_day_ahead
 
   if !reflect.DeepEqual(actual, expected) {
@@ -108,7 +108,7 @@ func TestDateDistanceOneDayAhead(t *testing.T) {
 }
 
 func TestDateDistanceTwoDaysAhead(t *testing.T) {
-  actual   := date.Normalize("two days ahead", date.Stub(today))
+  actual   := date.Normalize("two days ahead")
   expected := two_days_ahead
 
   if !reflect.DeepEqual(actual, expected) {
@@ -117,7 +117,7 @@ func TestDateDistanceTwoDaysAhead(t *testing.T) {
 }
 
 func TestDateDistanceOneWeekAhead(t *testing.T) {
-  actual   := date.Normalize("one week ahead", date.Stub(today))
+  actual   := date.Normalize("one week ahead")
   expected := one_week_ahead
 
   if !reflect.DeepEqual(actual, expected) {
@@ -126,7 +126,7 @@ func TestDateDistanceOneWeekAhead(t *testing.T) {
 }
 
 func TestDateDistanceTwoWeeksAhead(t *testing.T) {
-  actual   := date.Normalize("two weeks ahead", date.Stub(today))
+  actual   := date.Normalize("two weeks ahead")
   expected := two_weeks_ahead
 
   if !reflect.DeepEqual(actual, expected) {
@@ -135,7 +135,7 @@ func TestDateDistanceTwoWeeksAhead(t *testing.T) {
 }
 
 func TestDateDistanceOneMonthAhead(t *testing.T) {
-  actual   := date.Normalize("one month ahead", date.Stub(today))
+  actual   := date.Normalize("one month ahead")
   expected := one_month_ahead
 
   if !reflect.DeepEqual(actual, expected) {
@@ -144,7 +144,7 @@ func TestDateDistanceOneMonthAhead(t *testing.T) {
 }
 
 func TestDateDistanceTwoMonthsAhead(t *testing.T) {
-  actual   := date.Normalize("two months ahead", date.Stub(today))
+  actual   := date.Normalize("two months ahead")
   expected := two_months_ahead
 
   if !reflect.DeepEqual(actual, expected) {
@@ -153,7 +153,7 @@ func TestDateDistanceTwoMonthsAhead(t *testing.T) {
 }
 
 func TestDateDistanceOneYearAhead(t *testing.T) {
-  actual   := date.Normalize("one year ahead", date.Stub(today))
+  actual   := date.Normalize("one year ahead")
   expected := one_year_ahead
 
   if !reflect.DeepEqual(actual, expected) {
@@ -162,7 +162,7 @@ func TestDateDistanceOneYearAhead(t *testing.T) {
 }
 
 func TestDateDistanceTwoYearsAhead(t *testing.T) {
-  actual   := date.Normalize("two years ahead", date.Stub(today))
+  actual   := date.Normalize("two years ahead")
   expected := two_years_ahead
 
   if !reflect.DeepEqual(actual, expected) {
@@ -171,7 +171,7 @@ func TestDateDistanceTwoYearsAhead(t *testing.T) {
 }
 
 func TestDateDistance2DaysAgo(t *testing.T) {
-  actual   := date.Normalize("2 days ago", date.Stub(today))
+  actual   := date.Normalize("2 days ago")
   expected := two_days_ago
 
   if !reflect.DeepEqual(actual, expected) {
@@ -180,7 +180,7 @@ func TestDateDistance2DaysAgo(t *testing.T) {
 }
 
 func TestDateDistance1DayAgo(t *testing.T) {
-  actual   := date.Normalize("1 day ago", date.Stub(today))
+  actual   := date.Normalize("1 day ago")
   expected := yesterday
 
   if !reflect.DeepEqual(actual, expected) {

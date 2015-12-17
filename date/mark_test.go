@@ -22,7 +22,7 @@ var (
 )
 
 func TestDateMarkLastYear(t *testing.T) {
-  actual   := date.Normalize("last year", date.Stub(today))
+  actual   := date.Normalize("last year")
   expected := last_year
 
   if !reflect.DeepEqual(actual, expected) {
@@ -31,7 +31,7 @@ func TestDateMarkLastYear(t *testing.T) {
 }
 
 func TestDateMarkNextYear(t *testing.T) {
-  actual   := date.Normalize("next year", date.Stub(today))
+  actual   := date.Normalize("next year")
   expected := next_year
 
   if !reflect.DeepEqual(actual, expected) {
@@ -40,7 +40,7 @@ func TestDateMarkNextYear(t *testing.T) {
 }
 
 func TestDateMarkLastNovember(t *testing.T) {
-  actual   := date.Normalize("last november", date.Stub(today))
+  actual   := date.Normalize("last november")
   expected := last_nov
 
   if !reflect.DeepEqual(actual, expected) {
@@ -49,7 +49,7 @@ func TestDateMarkLastNovember(t *testing.T) {
 }
 
 func TestDateMarkNextJanuar(t *testing.T) {
-  actual   := date.Normalize("next januar", date.Stub(today))
+  actual   := date.Normalize("next januar")
   expected := next_jan
 
   if !reflect.DeepEqual(actual, expected) {
@@ -58,7 +58,7 @@ func TestDateMarkNextJanuar(t *testing.T) {
 }
 
 func TestDateMarkLastSunday(t *testing.T) {
-  actual   := date.Normalize("last sunday", date.Stub(today))
+  actual   := date.Normalize("last sunday")
   expected := last_sun
 
   if !reflect.DeepEqual(actual, expected) {
@@ -67,7 +67,7 @@ func TestDateMarkLastSunday(t *testing.T) {
 }
 
 func TestDateMarkLastMonday(t *testing.T) {
-  actual   := date.Normalize("last monday", date.Stub(today))
+  actual   := date.Normalize("last monday")
   expected := last_mon
 
   if !reflect.DeepEqual(actual, expected) {
@@ -76,7 +76,7 @@ func TestDateMarkLastMonday(t *testing.T) {
 }
 
 func TestDateMarkLastSaturday(t *testing.T) {
-  actual   := date.Normalize("last saturday", date.Stub(today))
+  actual   := date.Normalize("last saturday")
   expected := last_sat
 
   if !reflect.DeepEqual(actual, expected) {
@@ -85,7 +85,7 @@ func TestDateMarkLastSaturday(t *testing.T) {
 }
 
 func TestDateMarkNextMonday(t *testing.T) {
-  actual   := date.Normalize("next monday", date.Stub(today))
+  actual   := date.Normalize("next monday")
   expected := next_mon
 
   if !reflect.DeepEqual(actual, expected) {
@@ -94,7 +94,7 @@ func TestDateMarkNextMonday(t *testing.T) {
 }
 
 func TestDateMarkNextSunday(t *testing.T) {
-  actual   := date.Normalize("next sunday", date.Stub(today))
+  actual   := date.Normalize("next sunday")
   expected := next_sun
 
   if !reflect.DeepEqual(actual, expected) {
@@ -103,7 +103,7 @@ func TestDateMarkNextSunday(t *testing.T) {
 }
 
 func TestDateMarkNextSaturday(t *testing.T) {
-  actual   := date.Normalize("next saturday", date.Stub(today))
+  actual   := date.Normalize("next saturday")
   expected := next_sat
 
   if !reflect.DeepEqual(actual, expected) {

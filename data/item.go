@@ -27,7 +27,7 @@ type Item struct {
 func (i *Item) Toggle() *Item {
   if i.Status == Pend {
     i.setDone()
-  } else {
+  } else if i.Status == Done {
     i.setPend()
   }
   return i

@@ -6,7 +6,13 @@ import (
   "errors"
 )
 
-func byName(str string, t Clock) (time.Time, error) {
+var nameMap = map[string]func(string, Clock) time.Time {
+  "yesterday": Yesterday,
+  "today":     Today,
+  "tomorrow":  Tomorrow,
+}
+
+func ByName(str string, t Clock) (time.Time, error) {
   f, ok := nameMap[str]
   if !ok {
     return t.Now(), errors.New(fmt.Sprintf("Not a named date: %s", str))
@@ -14,21 +20,15 @@ func byName(str string, t Clock) (time.Time, error) {
   return f(str, t), nil
 }
 
-var nameMap = map[string]func(string, Clock) time.Time {
-  "yesterday": yesterday,
-  "today":     today,
-  "tomorrow":  tomorrow,
-}
-
-func today(str string, t Clock) time.Time {
+func Today(str string, t Clock) time.Time {
   return t.Now()
 }
 
-func yesterday(str string, t Clock) time.Time {
+func Yesterday(str string, t Clock) time.Time {
   return t.Now().AddDate(0, 0, -1)
 }
 
-func tomorrow(str string, t Clock) time.Time {
+func Tomorrow(str string, t Clock) time.Time {
   return t.Now().AddDate(0, 0, 1)
 }
 
