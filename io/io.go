@@ -2,6 +2,10 @@ package io
 
 // var stdin *os.File
 
+import (
+  "os"
+)
+
 type Io interface {
   ReadLines() ([]string, error)
   WriteLines([]string) error
@@ -9,10 +13,11 @@ type Io interface {
 }
 
 func NewIo(path string) Io {
-  if path == "" {
-    return StdIo{}
+  stat, _ := os.Stdin.Stat()
+  if (stat.Mode() & os.ModeCharDevice) == 0 {
+    return NewStdIo()
   } else {
-    return FileIo{ path: path }
+    return NewFileIo(path)
   }
 }
 

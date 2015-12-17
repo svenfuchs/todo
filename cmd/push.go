@@ -14,7 +14,7 @@ func NewPushCmd(args *Args) Runnable {
   }
 
   src := NewIo(args.Path)
-  out := NewIo("")
+  out := NewStdIo()
   return PushCmd{ Cmd { args, src, out } }
 }
 

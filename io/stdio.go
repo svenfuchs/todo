@@ -8,6 +8,10 @@ import (
 
 // var stdin *os.File
 
+func NewStdIo() Io {
+  return StdIo{}
+}
+
 type StdIo struct{}
 
 func (s StdIo) ReadLines() ([]string, error) {

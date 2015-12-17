@@ -6,6 +6,13 @@ import (
   "strings"
 )
 
+func NewFileIo(path string) Io {
+  if path == "" {
+    path = "./todo.txt"
+  }
+  return FileIo{ path }
+}
+
 type FileIo struct {
   path string
 }

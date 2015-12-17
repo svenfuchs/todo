@@ -8,7 +8,7 @@ import (
 func NewToggleCmd(args *Args) Runnable {
   args.Format = "full"
   src := NewIo(args.Path)
-  out := NewIo("")
+  out := NewStdIo()
   return ToggleCmd{ Cmd { args, src, out } }
 }
 
