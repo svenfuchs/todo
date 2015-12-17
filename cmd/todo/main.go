@@ -60,8 +60,8 @@ func main() {
   kingpin.MustParse(app.Parse(os.Args[1:]))
 }
 
-// For the sub-sub command `todo push [service]` i need to set config["service"]
-// as a PreAction.
+// For run methods i'd like to use a dispatch pattern. For the sub-sub command
+// `todo push [service]` i need to set config["service"] as a PreAction.
 
 func action(f func(...string), str ...string) kingpin.Action {
   return func(p *kingpin.ParseContext) error {

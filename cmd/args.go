@@ -21,7 +21,7 @@ func (a *Args) SetConfig(args ...string) {
 }
 
 func (a *Args) SetDate(args ...string) {
-  a.Date = args[0] + ":"   + args[1]
+  a.Date = args[0] + ":" + args[1]
 }
 
 var cmdFactories = map[string]func(*Args) Runnable {

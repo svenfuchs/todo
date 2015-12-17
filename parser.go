@@ -7,12 +7,12 @@ import (
   "github.com/svenfuchs/todo/date"
 )
 
-var (
-  statusPattern   = regexp.MustCompile(`^([-x]{1})`)
-  idPattern       = regexp.MustCompile(` \[(\d+)\]`)
-  tagsPattern     = regexp.MustCompile(` ([\w\-]+):([\w\-]+)`)
-  projectsPattern = regexp.MustCompile(` \+([\w\-]+)`)
-)
+var patterns = map[string]*regexp.Regexp {
+  "status":   regexp.MustCompile(`^([-x]{1})`),
+  "id":       regexp.MustCompile(` \[(\d+)\]`),
+  "tags":     regexp.MustCompile(` ([\w\-]+):([\w\-]+)`),
+  "projects": regexp.MustCompile(` \+([\w\-]+)`),
+}
 
 func NewParser(line string) Parser {
   return Parser{ line }
@@ -23,7 +23,7 @@ type Parser struct {
 }
 
 func (p Parser) Id() int {
-  matches:= idPattern.FindStringSubmatch(p.Line)
+  matches := patterns["id"].FindStringSubmatch(p.Line)
   if matches == nil {
     return 0
   }
@@ -32,7 +32,7 @@ func (p Parser) Id() int {
 }
 
 func (p Parser) Status() string {
-  match := statusPattern.FindString(p.Line)
+  match := patterns["status"].FindString(p.Line)
   switch match {
     case "-":
       return Pend
@@ -45,7 +45,7 @@ func (p Parser) Status() string {
 
 func (p Parser) Tags() map[string]string {
   tags := map[string]string{}
-  for _, match := range tagsPattern.FindAllStringSubmatch(p.Line, -1) {
+  for _, match := range patterns["tags"].FindAllStringSubmatch(p.Line, -1) {
     tags[match[1]] = date.Normalize(match[2], date.Time)
   }
   return tags
@@ -53,14 +53,14 @@ func (p Parser) Tags() map[string]string {
 
 func (p Parser) Text() string {
   text := p.Line
-  text = idPattern.ReplaceAllString(text, "")
-  text = statusPattern.ReplaceAllString(text, "")
-  text = tagsPattern.ReplaceAllString(text, "")
+  for _, pattern := range patterns {
+    text = pattern.ReplaceAllString(text, "")
+  }
   return strings.TrimSpace(text)
 }
 
 func (p Parser) Projects() []string {
-  matches := projectsPattern.FindAllStringSubmatch(p.Text(), -1)
+  matches := patterns["projects"].FindAllStringSubmatch(p.Text(), -1)
   projects := []string{}
   for _, match := range matches {
     projects = append(projects, match[1])

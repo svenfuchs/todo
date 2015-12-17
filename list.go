@@ -10,16 +10,6 @@ func ParseItemList(lines []string) List {
   return List{ Items: items, nextId: maxId(items) }
 }
 
-func maxId(items []Item) int {
-  id := 0
-  for _, item := range items {
-    if id < item.Id {
-      id = item.Id
-    }
-  }
-  return id
-}
-
 type List struct {
   Items []Item
   nextId int
@@ -28,10 +18,6 @@ type List struct {
 func (l *List) NextId() int {
   l.nextId ++
   return l.nextId
-}
-
-func (l *List) Size() int {
-  return len(l.Items)
 }
 
 func (l *List) Ids() []int {
@@ -71,4 +57,14 @@ func (l *List) Toggle(filter Filter) List {
     }
   }
   return List{ Items: items, nextId: l.nextId }
+}
+
+func maxId(items []Item) int {
+  id := 0
+  for _, item := range items {
+    if id < item.Id {
+      id = item.Id
+    }
+  }
+  return id
 }
