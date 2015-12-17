@@ -16,16 +16,13 @@ type Args struct {
   Config map[string]string
 }
 
-func (a *Args) SetDate(date string)     { a.Date = "date:"   + date }
-func (a *Args) SetBefore(date string)   { a.Date = "before:" + date }
-func (a *Args) SetSince(date string)    { a.Date = "since:"  + date }
-func (a *Args) SetAfter(date string)    { a.Date = "after:"  + date }
+func (a *Args) SetConfig(args ...string) {
+  a.Config[args[0]] = args[1]
+}
 
-func (a *Args) SetUser(value string)    { a.Config["username"] = value }
-func (a *Args) SetToken(value string)   { a.Config["token"]    = value }
-func (a *Args) SetTeam(value string)    { a.Config["team"]     = value }
-func (a *Args) SetService(value string) { a.Config["service"]  = value }
-func (a *Args) SetArchive(value string) { a.Config["archive"]  = value }
+func (a *Args) SetDate(args ...string) {
+  a.Date = args[0] + ":"   + args[1]
+}
 
 var cmdFactories = map[string]func(*Args) Runnable {
   "archive": NewArchiveCmd,
@@ -34,6 +31,6 @@ var cmdFactories = map[string]func(*Args) Runnable {
   "toggle":  NewToggleCmd,
 }
 
-func (a *Args) Run(cmd string) {
-  cmdFactories[cmd](a).Run()
+func (a *Args) Run(args ...string) {
+  cmdFactories[args[0]](a).Run()
 }

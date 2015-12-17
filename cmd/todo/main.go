@@ -10,51 +10,51 @@ func main() {
   app := kingpin.New("todo", "A command-line todo.txt tool.")
 
   a := NewArgs()
-  c := app.Command("archive", "Archive done todo items."      ).Action(call(a.Run, "archive"))
+  c := app.Command("archive", "Archive done todo items."      ).Action(action(a.Run, "archive"))
 	c.Flag("file",     "Todo.txt file to work with."            ).Short('f').StringVar(&a.Path)
-	c.Flag("archive",  "File to archive to."                    ).Short('a').SetValue(&funcValue{ a.SetArchive })
+	c.Flag("archive",  "File to archive to."                    ).Short('a').SetValue(&funcValue{ set(a.SetConfig, "archive") })
 	c.Flag("format",   "Output format."                         ).Short('o').StringVar(&a.Format)
-	c.Flag("before",   "Filter by done before."                 ).Short('b').SetValue(&funcValue{ a.SetBefore })
+	c.Flag("before",   "Filter by done before."                 ).Short('b').SetValue(&funcValue{ set(a.SetDate, "before") })
 
   a = NewArgs()
-	c = app.Command("list", "Filter and list todo items."       ).Action(call(a.Run, "list"))
+	c = app.Command("list", "Filter and list todo items."       ).Action(action(a.Run, "list"))
 	c.Flag("file",     "Todo.txt file to work with."            ).Short('f').StringVar(&a.Path)
 	c.Flag("format",   "Output format."                         ).Short('o').StringVar(&a.Format)
 	c.Flag("id",       "Filter by id."                          ).Short('i').IntsVar(&a.Ids)
 	c.Flag("status",   "Filter by status."                      ).Short('s').StringVar(&a.Status)
 	c.Flag("text",     "Filter by text."                        ).Short('t').StringVar(&a.Text)
 	c.Flag("projects", "Filter by projects (comma separated)."  ).Short('p').StringsVar(&a.Projects)
-	c.Flag("date",     "Filter by done date."                   ).Short('a').SetValue(&funcValue{ a.SetDate   })
-	c.Flag("after",    "Filter by done after."                  ).Short('a').SetValue(&funcValue{ a.SetAfter  })
-	c.Flag("since",    "Filter by done since."                  ).Short('n').SetValue(&funcValue{ a.SetSince  })
-	c.Flag("before",   "Filter by done before."                 ).Short('b').SetValue(&funcValue{ a.SetBefore })
+	c.Flag("date",     "Filter by done date."                   ).Short('a').SetValue(&funcValue{ set(a.SetDate, "date")   })
+	c.Flag("after",    "Filter by done after."                  ).Short('a').SetValue(&funcValue{ set(a.SetDate, "after")  })
+	c.Flag("since",    "Filter by done since."                  ).Short('n').SetValue(&funcValue{ set(a.SetDate, "since")  })
+	c.Flag("before",   "Filter by done before."                 ).Short('b').SetValue(&funcValue{ set(a.SetDate, "before") })
 	c.Arg("input",     "Filter by full line."                   ).StringVar(&a.Line)
 
   a = NewArgs()
 	c = app.Command("push", "Push todo items.")
 	c.Flag("file",     "Todo.txt file to work with."            ).Short('f').StringVar(&a.Path)
 	c.Flag("format",   "Output format."                         ).Short('o').StringVar(&a.Format)
-	c.Flag("date",     "Filter by done date."                   ).Short('a').SetValue(&funcValue{ a.SetDate  })
-	c.Flag("after",    "Filter by done after."                  ).Short('a').SetValue(&funcValue{ a.SetAfter })
-	c.Flag("since",    "Filter by done since."                  ).Short('n').SetValue(&funcValue{ a.SetSince })
+	c.Flag("date",     "Filter by done date."                   ).Short('a').SetValue(&funcValue{ set(a.SetDate, "date")   })
+	c.Flag("after",    "Filter by done after."                  ).Short('a').SetValue(&funcValue{ set(a.SetDate, "after")  })
+	c.Flag("since",    "Filter by done since."                  ).Short('n').SetValue(&funcValue{ set(a.SetDate, "since")  })
 
-  s := c.Command("idonethis", "Service Idonethis"             ).Action(call(a.Run, "push")).PreAction(call(a.SetService, "idonethis"))
-  s.Flag("username", "Idonethis username"                     ).Envar("TODO_IDONETHIS_USERNAME").SetValue(&funcValue{ a.SetUser })
-  s.Flag("token",    "Idonethis token"                        ).Envar("TODO_IDONETHIS_TOKEN"   ).SetValue(&funcValue{ a.SetToken })
-  s.Flag("team",     "Idonethis team"                         ).Envar("TODO_IDONETHIS_TEAM"    ).SetValue(&funcValue{ a.SetTeam })
+  s := c.Command("idonethis", "Service Idonethis"             ).Action(action(a.Run, "push")).PreAction(action(a.SetConfig, "service", "idonethis"))
+  s.Flag("username", "Idonethis username"                     ).Envar("TODO_IDONETHIS_USERNAME").SetValue(&funcValue{ set(a.SetConfig, "username") })
+  s.Flag("token",    "Idonethis token"                        ).Envar("TODO_IDONETHIS_TOKEN"   ).SetValue(&funcValue{ set(a.SetConfig, "token") })
+  s.Flag("team",     "Idonethis team"                         ).Envar("TODO_IDONETHIS_TEAM"    ).SetValue(&funcValue{ set(a.SetConfig, "team") })
 	s.Arg("input",     "Filter by full line."                   ).StringVar(&a.Line)
 
   a = NewArgs()
-	c = app.Command("toggle", "Toggle todo items."              ).Action(call(a.Run, "toggle"))
+	c = app.Command("toggle", "Toggle todo items."              ).Action(action(a.Run, "toggle"))
 	c.Flag("file",     "Todo.txt file to work with."            ).Short('f').StringVar(&a.Path)
 	c.Flag("id",       "Filter by id."                          ).Short('i').IntsVar(&a.Ids)
 	c.Flag("status",   "Filter by status."                      ).Short('s').StringVar(&a.Status)
 	c.Flag("text",     "Filter by text."                        ).Short('t').StringVar(&a.Text)
 	c.Flag("projects", "Filter by projects (comma separated)."  ).Short('p').StringsVar(&a.Projects)
-	c.Flag("date",     "Filter by done date."                   ).Short('a').SetValue(&funcValue{ a.SetDate   })
-	c.Flag("after",    "Filter by done after."                  ).Short('a').SetValue(&funcValue{ a.SetAfter  })
-	c.Flag("since",    "Filter by done since."                  ).Short('n').SetValue(&funcValue{ a.SetSince  })
-	c.Flag("before",   "Filter by done before."                 ).Short('b').SetValue(&funcValue{ a.SetBefore })
+	c.Flag("date",     "Filter by done date."                   ).Short('a').SetValue(&funcValue{ set(a.SetDate, "date")   })
+	c.Flag("after",    "Filter by done after."                  ).Short('a').SetValue(&funcValue{ set(a.SetDate, "after")  })
+	c.Flag("since",    "Filter by done since."                  ).Short('n').SetValue(&funcValue{ set(a.SetDate, "since")  })
+	c.Flag("before",   "Filter by done before."                 ).Short('b').SetValue(&funcValue{ set(a.SetDate, "before") })
 	c.Arg("input",     "Filter by full line."                   ).StringVar(&a.Line)
 
   kingpin.MustParse(app.Parse(os.Args[1:]))
@@ -63,10 +63,16 @@ func main() {
 // For the sub-sub command `todo push [service]` i need to set config["service"]
 // as a PreAction.
 
-func call(f func(string), value string) kingpin.Action {
+func action(f func(...string), str ...string) kingpin.Action {
   return func(p *kingpin.ParseContext) error {
-    f(value)
+    f(str...)
     return nil
+  }
+}
+
+func set(f func(args ...string), key string) func(string) {
+  return func(value string) {
+    f(key, value)
   }
 }
 

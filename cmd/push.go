@@ -1,7 +1,6 @@
 package cmd
 
 import (
-  "time"
   . "github.com/svenfuchs/todo"
   . "github.com/svenfuchs/todo/service"
   . "github.com/svenfuchs/todo/io"
@@ -24,7 +23,7 @@ type PushCmd struct {
 }
 
 func (c PushCmd) Run() {
-  service := c.service(c.args.Config)
+  service := NewService(c.args.Config)
   ids, _  := c.ids(service) // TODO report error
 
   list := c.list()
@@ -33,16 +32,6 @@ func (c PushCmd) Run() {
 
   c.push(list, service)
   c.write(c.out, list)
-}
-
-func (c PushCmd) service(config map[string]string) Service {
-  var service Service
-  switch config["service"] {
-    case "idonethis":
-      after := time.Now().AddDate(0, 0, -7).Format("2006-01-02")
-      service = NewIdonethis(config["team"], config["username"], config["token"], after)
-  }
-  return service
 }
 
 func (c PushCmd) push(list List, service Service) {

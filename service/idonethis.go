@@ -3,6 +3,7 @@ package service
 import (
   "bytes"
   "encoding/json"
+  "time"
   api "github.com/svenfuchs/todo/service/idonethis"
 )
 
@@ -10,8 +11,9 @@ var (
   idonethis_uri = "https://idonethis.com/api/v0.1/dones/"
 )
 
-func NewIdonethis(team string, username string, token string, after string) Idonethis {
-  return Idonethis { team, username, token, after }
+func NewIdonethis(config map[string]string) Idonethis {
+  after := time.Now().AddDate(0, 0, -7).Format("2006-01-02")
+  return Idonethis { config["team"], config["username"], config["token"], after }
 }
 
 type Idonethis struct {
