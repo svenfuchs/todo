@@ -8,7 +8,7 @@ import (
 func NewToggleCmd(args *Args) Runnable {
   args.Format = "full"
   src := NewIo(args.Path)
-  out := NewStdIo()
+  out := NewStdErr()
   return ToggleCmd{ Cmd { args, src, out } }
 }
 
@@ -18,8 +18,9 @@ type ToggleCmd struct {
 
 func (c ToggleCmd) Run() {
   list := c.list()
-  selected := list.Toggle(c.filter())
-  c.write(c.out, selected)
+  list.Toggle(c.filter())
+  // selected := list.Toggle(c.filter())
+  // c.write(c.out, selected)
   c.write(c.src, list)
 }
 

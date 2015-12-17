@@ -12,7 +12,7 @@ func NewArchiveCmd(args *Args) Runnable {
   }
 
   src := NewIo(args.Path)
-  out := NewStdIo()
+  out := NewStdErr()
   archive := NewIo(args.Config["archive"])
   return ArchiveCmd{ Cmd { args, src, out }, archive }
 }

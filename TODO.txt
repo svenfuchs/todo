@@ -8,6 +8,11 @@ Currently works fine for the `list` command. For commands that "report" on
 stdout the option to pipe data in is pretty much useless, because the
 output would be cluttered by the report.
 
-- Make `archive`, `push`, and `toggle` report to stderr
-- Add a template for the report (e.g. "3 items archived: ...")
-- Add `--report`, defaulting to true, so `--no-report` can turn it off
+x Make `archive`, `push`, and `toggle` report to stderr done:2015-12-17 [4]
+- Add a template for the report (e.g. "3 items archived: ...") [5]
+- Add `--report`, defaulting to true, so `--no-report` can turn it off [6]
+
+
+
+
+printf("%+v\n", selected)

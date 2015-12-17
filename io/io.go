@@ -15,7 +15,7 @@ type Io interface {
 func NewIo(path string) Io {
   stat, _ := os.Stdin.Stat()
   if (stat.Mode() & os.ModeCharDevice) == 0 {
-    return NewStdIo()
+    return NewStdOut()
   } else {
     return NewFileIo(path)
   }

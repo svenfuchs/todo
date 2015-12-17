@@ -8,7 +8,7 @@ import (
 func TestFormatFull(t *testing.T) {
   items    := ParseItemList([]string{ "# Comment", "- foo", "x bar due:2015-12-01 done:2015-12-13 [1]" }).Items
   actual   := NewFormat("full").Apply(items)
-  expected := []string{ "# Comment", "- foo [0]", "x bar done:2015-12-13 due:2015-12-01 [1]" }
+  expected := []string{ "# Comment", "- foo [2]", "x bar done:2015-12-13 due:2015-12-01 [1]" }
 
   AssertEqual(t, actual, expected)
 }
@@ -24,7 +24,7 @@ func TestFormatShort(t *testing.T) {
 func TestFormatId(t *testing.T) {
   items    := ParseItemList([]string{ "- foo", "x bar due:2015-12-01 done:2015-12-13 [1]" }).Items
   actual   := NewFormat("id").Apply(items)
-  expected := []string{ "[0]", "[1]" }
+  expected := []string{ "[2]", "[1]" }
 
   AssertEqual(t, actual, expected)
 }

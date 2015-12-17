@@ -8,11 +8,17 @@ import (
 
 // var stdin *os.File
 
-func NewStdIo() Io {
+func NewStdOut() Io {
   return StdIo{}
 }
 
-type StdIo struct{}
+func NewStdErr() Io {
+  return StdIo{ os.Stderr }
+}
+
+type StdIo struct{
+  out *os.File
+}
 
 func (s StdIo) ReadLines() ([]string, error) {
   lines   := []string{}
@@ -26,8 +32,7 @@ func (s StdIo) ReadLines() ([]string, error) {
 
 func (s StdIo) WriteLines(lines []string) error {
   if len(lines) == 0 { return nil }
-  io := os.Stdout
-  io.Write([]byte(strings.Join(lines, "\n") + "\n"))
+  s.out.Write([]byte(strings.Join(lines, "\n") + "\n"))
   return nil
 }
 

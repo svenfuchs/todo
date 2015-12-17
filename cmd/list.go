@@ -6,7 +6,7 @@ import (
 
 func NewListCmd(args *Args) Runnable {
   src := NewIo(args.Path)
-  out := NewStdIo()
+  out := NewStdErr()
   return ListCmd{ Cmd { args, src, out } }
 }
 

@@ -1,13 +1,20 @@
 package data
 
-// import "fmt"
-
 func ParseItemList(lines []string) List {
   items := []Item{}
   for _, line := range lines {
     items = append(items, ParseItem(line))
   }
-  return List{ Items: items, nextId: maxId(items) }
+  list := List{ Items: items, nextId: maxId(items) }
+
+  for i, _ := range list.Items {
+    item := &list.Items[i]
+
+    if !item.IsNone() && item.Id == 0 {
+      item.Id = list.NextId()
+    }
+  }
+  return list
 }
 
 type List struct {
