@@ -25,17 +25,17 @@ func (c PushCmd) Run() {
 
   list := c.list()
   list = list.Select(c.filter)
-  list = list.RejectIf(func(i Item) bool { return includesInt(ids, i.Id) })
+  list = list.Reject(Filter{ Ids: ids })
 
   c.push(list, service)
-  c.output(list, "full")
+  c.write(c.out, list, "full")
 }
 
 func (c PushCmd) service(config map[string]string) Service {
   var service Service
   switch config["service"] {
     case "idonethis":
-      after := time.Now().AddDate(0, 0, -1).Format("2006-01-02")
+      after := time.Now().AddDate(0, 0, -7).Format("2006-01-02")
       service = NewIdonethis(config["team"], config["username"], config["token"], after)
   }
   return service

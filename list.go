@@ -55,17 +55,7 @@ func (l *List) Select(filter Filter) List {
 func (l *List) Reject(filter Filter) List {
   items := []Item{}
   for _, item := range l.Items {
-    if !filter.Apply(item) {
-      items = append(items, item)
-    }
-  }
-  return List{ Items: items, nextId: l.nextId }
-}
-
-func (l *List) RejectIf(match func(Item) bool) List {
-  items := []Item{}
-  for _, item := range l.Items {
-    if !match(item) {
+    if filter.IsEmpty() || !filter.Apply(item) {
       items = append(items, item)
     }
   }
@@ -82,15 +72,3 @@ func (l *List) Toggle(filter Filter) List {
   }
   return List{ Items: items, nextId: l.nextId }
 }
-
-// func (l *List) Find(filter Filter) (Item, error) {
-//   items := l.Select(filter).Items
-//   switch len(items) {
-//     case 0:
-//       return Item{}, errors.New(fmt.Sprintf("Could not find item matching %s", filter))
-//     case 1:
-//       return items[0], nil
-//     default:
-//       return Item{}, errors.New(fmt.Sprintf("Multiple items found matching %s", filter))
-//   }
-// }

@@ -5,8 +5,6 @@ import (
   . "github.com/svenfuchs/todo/io"
 )
 
-// make Filter work with arrays on each field, remove list.RejectIf
-
 func NewArchiveCmd(path string, filter Filter, format string, config map[string]string) ArchiveCmd {
   src := NewIo(path)
   out := NewIo("")
@@ -21,11 +19,11 @@ type ArchiveCmd struct {
 
 func (c ArchiveCmd) Run() {
   list := c.list()
-  arch := list.Select(c.filter)
+  dump := list.Select(c.filter)
   keep := list.Reject(c.filter)
 
-  c.archive.AppendLines(c.formatted(arch.Items, c.format))
-  c.src.WriteLines(c.formatted(keep.Items, c.format))
-  c.output(arch, c.format)
+  c.append(c.archive, dump, c.format)
+  c.write(c.src, keep, c.format)
+  c.write(c.out, dump, c.format)
 }
 

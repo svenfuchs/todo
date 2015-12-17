@@ -4,17 +4,19 @@ import (
   "fmt"
   "testing"
   "time"
+  . "github.com/svenfuchs/todo"
+  . "github.com/svenfuchs/todo/io"
   . "github.com/svenfuchs/todo/test"
 )
 
 func TestCmdListByIdFound(t *testing.T) {
   in     := NewMemoryIo("- foo [1]\nx bar [2]")
   out    := NewMemoryIo("")
-  filter := Filter{ id: 1 }
+  filter := Filter{ Ids: []int{ 1 } }
   format := ""
 
   ListCmd { Cmd { &in, &out, filter, format } }.Run()
-  actual   := out.MustReadLines()
+  actual, _ := out.ReadLines()
   expected := []string{ "- foo" }
 
   AssertEqual(t, actual, expected)
@@ -23,7 +25,7 @@ func TestCmdListByIdFound(t *testing.T) {
 func TestCmdListByTextFound(t *testing.T) {
   in     := NewMemoryIo("- foo [1]\nx bar [2]")
   out    := NewMemoryIo("")
-  filter := Filter{ text: "bar" }
+  filter := Filter{ Text: "bar" }
   format := ""
 
   ListCmd { Cmd { &in, &out, filter, format } }.Run()
@@ -36,7 +38,7 @@ func TestCmdListByTextFound(t *testing.T) {
 func TestCmdListByProjectsFound(t *testing.T) {
   in     := NewMemoryIo("- foo +baz [1]\nx bar +baz [2]")
   out    := NewMemoryIo("")
-  filter := Filter{ projects: []string { "baz" } }
+  filter := Filter{ Projects: []string { "baz" } }
   format := ""
 
   ListCmd { Cmd { &in, &out, filter, format } }.Run()
@@ -63,11 +65,11 @@ func TestCmdToggleByIdFound(t *testing.T) {
   now    := time.Now().Format("2006-01-02")
   in     := NewMemoryIo("# Comment\n- foo [1]\nx bar [2]")
   out    := NewMemoryIo("")
-  filter := Filter{ id: 1 }
+  filter := Filter{ Ids: []int { 1 } }
   format := ""
 
   ToggleCmd { Cmd { &in, &out, filter, format } }.Run()
-  actual   := out.MustReadLines()
+  actual, _ := out.ReadLines()
   expected := []string{ "# Comment", fmt.Sprintf("x foo done:%s [1]", now), "x bar [2]" }
 
   AssertEqual(t, actual, expected)
@@ -76,7 +78,7 @@ func TestCmdToggleByIdFound(t *testing.T) {
 func TestCmdToggleByTextFound(t *testing.T) {
   in     := NewMemoryIo("# Comment\n- foo [1]\nx bar done:2015-12-13 [2]")
   out    := NewMemoryIo("")
-  filter := Filter{ text: "bar" }
+  filter := Filter{ Text: "bar" }
   format := ""
 
   ToggleCmd { Cmd { &in, &out, filter, format } }.Run()
@@ -90,7 +92,7 @@ func TestCmdToggleByProjectsFound(t *testing.T) {
   now    := time.Now().Format("2006-01-02")
   in     := NewMemoryIo("- foo +baz [1]\nx bar +baz [2]")
   out    := NewMemoryIo("")
-  filter := Filter{ projects: []string { "baz" } }
+  filter := Filter{ Projects: []string { "baz" } }
   format := ""
 
   ToggleCmd { Cmd { &in, &out, filter, format } }.Run()

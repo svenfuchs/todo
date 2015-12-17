@@ -20,13 +20,13 @@ type Opts struct {
 }
 
 func (o Opts) filter() Filter {
-  return NewFilter(o.id, o.status, o.text, o.projects, o.date)
+  return NewFilter([]int{ o.id }, o.status, o.text, o.projects, o.date)
 }
 
-func (o *Opts) setDate(date string)     { o.date = NewFilterDate("date", date)   }
-func (o *Opts) setBefore(date string)   { o.date = NewFilterDate("before", date) }
-func (o *Opts) setSince(date string)    { o.date = NewFilterDate("since", date)  }
-func (o *Opts) setAfter(date string)    { o.date = NewFilterDate("after", date)  }
+func (o *Opts) setDate(date string)     { o.date = NewFilterDate(date, "date")   }
+func (o *Opts) setBefore(date string)   { o.date = NewFilterDate(date, "before") }
+func (o *Opts) setSince(date string)    { o.date = NewFilterDate(date, "since")  }
+func (o *Opts) setAfter(date string)    { o.date = NewFilterDate(date, "after")  }
 
 func (o *Opts) setUser(value string)    { o.config["username"] = value }
 func (o *Opts) setToken(value string)   { o.config["token"] = value }

@@ -8,9 +8,8 @@ import (
 
 func NewToggleCmd(path string, filter Filter) ToggleCmd {
   src := NewIo(path)
-  out := NewIo(path)
   // out := NewFileIo("")
-  return ToggleCmd{ Cmd { src, out, filter, "full" } }
+  return ToggleCmd{ Cmd { src, nil, filter, "full" } }
 }
 
 type ToggleCmd struct {
@@ -20,6 +19,6 @@ type ToggleCmd struct {
 func (c ToggleCmd) Run() {
   list := c.list()
   list = list.Toggle(c.filter)
-  c.output(list, "full")
+  c.write(c.src, list, "full")
 }
 

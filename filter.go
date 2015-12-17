@@ -5,34 +5,41 @@ import (
   "github.com/svenfuchs/todo/date"
 )
 
-func NewFilter(id int, status string, text string, projects []string, date FilterDate) Filter {
+func NewFilter(ids []int, status string, text string, projects []string, date FilterDate) Filter {
   if len(status) > 4 {
     status = status[0:4]
   }
-  return Filter{ id, status, text, projects, date }
+  if len(ids) == 1 && ids[0] == 0 {
+    ids = []int {}
+  }
+  return Filter{ ids, status, text, projects, date }
 }
 
 func ParseFilter(line string) Filter {
   p := NewParser(line)
-  return NewFilter(p.Id(), p.Status(), p.Text(), []string{}, FilterDate{})
+  return NewFilter([]int{ p.Id() }, p.Status(), p.Text(), []string{}, FilterDate{})
 }
 
 type Filter struct {
-  id int
-  status string
-  text string
-  projects []string
-  date FilterDate
+  Ids []int
+  Status string
+  Text string
+  Projects []string
+  Date FilterDate
 }
 
 func (f Filter) Apply(i Item) bool {
   if i.IsNone() {
     return false
-  } else if f.id != 0 {
-    return f.id == i.Id
+  } else if len(f.Ids) > 0 && i.Id != 0 {
+    return includesInt(f.Ids, i.Id)
   } else {
     return f.matchesData(i)
   }
+}
+
+func (f Filter) IsEmpty() bool {
+  return len(f.Ids) == 0 && len(f.Projects) == 0 && f.Status == "" && f.Text == "" && f.Date.IsEmpty()
 }
 
 func (f Filter) matchesData(i Item) bool {
@@ -43,36 +50,37 @@ func (f Filter) matchesData(i Item) bool {
 }
 
 func (f Filter) matchesText(i Item) bool {
-  return f.text == "" || strings.Contains(i.Text, f.text)
+  return f.Text == "" || strings.Contains(i.Text, f.Text)
 }
 
 func (f Filter) matchesStatus(i Item) bool {
-  return f.status == "" || f.status == i.Status
+  return f.Status == "" || f.Status == i.Status
 }
 
 func (f Filter) matchesProjects(i Item) bool {
-  return len(f.projects) == 0  || len(intersect(i.Projects, f.projects)) > 0
+  return len(f.Projects) == 0  || len(intersect(i.Projects, f.Projects)) > 0
 }
 
 func (f Filter) matchesDate(i Item) bool {
-  return f.date.matches(f.statusDate(i))
+  return f.Date.matches(f.statusDate(i))
 }
 
 func (f Filter) statusDate(i Item) string {
-  switch f.status {
-    // case "added":
-    //   return i.AddedDate()
-    // case "due":
-    //   return i.DueDate()
-    // case "done":
-    //   return i.DoneDate()
-    default:
-      return i.DoneDate()
-  }
+  // switch f.status {
+  //   case "added":
+  //     return i.AddedDate()
+  //   case "due":
+  //     return i.DueDate()
+  //   case "done":
+  //     return i.DoneDate()
+  //   default:
+  //     return i.DoneDate()
+  // }
+  return i.DoneDate()
 }
 
-func NewFilterDate(d string, m string) FilterDate {
-  return FilterDate{ date.Normalize(d, date.Time), m }
+func NewFilterDate(date string, mode string) FilterDate {
+  return FilterDate{ date, mode }
 }
 
 type FilterDate struct {
@@ -91,13 +99,17 @@ func (d FilterDate) matches(date string) bool {
     return false
   }
 
-  cmp := strings.Compare(date, d.date)
+  cmp := strings.Compare(date, normalizeDate(d.date))
   switch d.mode {
     case "after":  return cmp == 1
     case "since":  return cmp == 0 || cmp == 1
     case "before": return cmp == -1
     default:       return cmp == 0
   }
+}
+
+func normalizeDate(str string) string {
+  return date.Normalize(str, date.Time)
 }
 
 func intersect(strs1 []string, strs2 []string) []string {
@@ -112,7 +124,7 @@ func intersect(strs1 []string, strs2 []string) []string {
   return res
 }
 
-func includes(nums []int, num int) bool {
+func includesInt(nums []int, num int) bool {
   for _, n := range nums {
     if num == n { return true }
   }

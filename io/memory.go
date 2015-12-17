@@ -4,12 +4,12 @@ import (
   "strings"
 )
 
-type MemoryIo struct {
-  content string
-}
-
 func NewMemoryIo(content string) MemoryIo {
   return MemoryIo { content }
+}
+
+type MemoryIo struct {
+  content string
 }
 
 func (s *MemoryIo) ReadLines() ([]string, error) {

@@ -22,9 +22,14 @@ func (c Cmd) list() List {
   return list
 }
 
-func (c Cmd) output(list List, format string) {
+func (c Cmd) write(io Io, list List, format string) {
   lines := c.formatted(list.Items, format)
-  c.out.WriteLines(lines)
+  io.WriteLines(lines)
+}
+
+func (c Cmd) append(io Io, list List, format string) {
+  lines := c.formatted(list.Items, format)
+  io.AppendLines(lines)
 }
 
 func (c Cmd) formatted(items []Item, format string) []string {
