@@ -1,17 +1,17 @@
 package io
 
 import (
-  "io"
-  "bufio"
-  "log"
-  "os"
-  "strings"
+	"bufio"
+	"io"
+	"log"
+	"os"
+	"strings"
 )
 
 var (
-  Stdin  io.ReadWriter = os.Stdin
-  Stdout io.ReadWriter = os.Stdout
-  Stderr io.ReadWriter = os.Stderr
+	Stdin  io.ReadWriter = os.Stdin
+	Stdout io.ReadWriter = os.Stdout
+	Stderr io.ReadWriter = os.Stderr
 )
 
 // type file interface {
@@ -21,36 +21,38 @@ var (
 // }
 
 func NewStdOut() Io {
-  return StdIo{ Stdout }
+	return StdIo{Stdout}
 }
 
 func NewStdErr() Io {
-  return StdIo{ Stderr }
+	return StdIo{Stderr}
 }
 
-type StdIo struct{
-  out io.Writer
+type StdIo struct {
+	out io.Writer
 }
 
 func (s StdIo) ReadLines() []string {
-  lines   := []string{}
-  scanner := bufio.NewScanner(Stdin)
+	lines := []string{}
+	scanner := bufio.NewScanner(Stdin)
 
-  for scanner.Scan() {
-    lines = append(lines, scanner.Text())
-  }
-  if err := scanner.Err(); err != nil {
-    log.Fatal(err)
-  }
-  return lines
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
+	}
+	return lines
 }
 
 func (s StdIo) WriteLines(lines []string) {
-  if len(lines) == 0 { return }
-  str := strings.Join(lines, "\n") + "\n"
-  s.out.Write([]byte(str))
+	if len(lines) == 0 {
+		return
+	}
+	str := strings.Join(lines, "\n") + "\n"
+	s.out.Write([]byte(str))
 }
 
 func (s StdIo) AppendLines(lines []string) {
-  s.WriteLines(lines)
+	s.WriteLines(lines)
 }
