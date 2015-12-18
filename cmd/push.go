@@ -12,6 +12,9 @@ func NewPushCmd(args *Args) Runnable {
   if args.Date == "" {
     args.Date = "since:yesterday"
   }
+  if args.Format == "" {
+    args.Format = "text,tags,id"
+  }
 
   src := NewIo(args.Path)
   out := NewStdErr()
@@ -30,13 +33,14 @@ func (c PushCmd) Run() {
   list = list.Select(c.filter())
   list = list.Reject(Filter{ Ids: ids })
 
-  c.push(list, service)
+  c.push(service, list)
   c.report(c.out, "push", list)
 }
 
-func (c PushCmd) push(list List, service Service) {
-  for _, item := range list.Items {
-    service.Push(item.Line) // TODO use format
+func (c PushCmd) push(service Service, list List) {
+  lines := c.formatted(list.Items)
+  for _, line := range lines {
+    service.Push(line)
   }
 }
 
