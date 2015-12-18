@@ -44,7 +44,6 @@ func main() {
   s.Flag("username", "Idonethis username"                     ).Envar("TODO_IDONETHIS_USERNAME").SetValue(&funcValue{ set(a.SetConfig, "username") })
   s.Flag("token",    "Idonethis token"                        ).Envar("TODO_IDONETHIS_TOKEN"   ).SetValue(&funcValue{ set(a.SetConfig, "token") })
   s.Flag("team",     "Idonethis team"                         ).Envar("TODO_IDONETHIS_TEAM"    ).SetValue(&funcValue{ set(a.SetConfig, "team") })
-  c.Flag("report",   "Print a report to stderr."              ).Short('r').Default("true").BoolVar(&a.Report)
 	s.Arg("input",     "Filter by full line."                   ).StringVar(&a.Line)
 
   a = NewArgs()
