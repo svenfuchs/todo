@@ -31,7 +31,7 @@ func (c PushCmd) Run() {
   list = list.Reject(Filter{ Ids: ids })
 
   c.push(list, service)
-  c.write(c.out, list)
+  c.report(c.out, "push", list)
 }
 
 func (c PushCmd) push(list List, service Service) {

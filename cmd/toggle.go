@@ -19,8 +19,8 @@ type ToggleCmd struct {
 func (c ToggleCmd) Run() {
   list := c.list()
   list.Toggle(c.filter())
-  // selected := list.Toggle(c.filter())
-  // c.write(c.out, selected)
-  c.write(c.src, list)
-}
+  res := list.Toggle(c.filter())
 
+  c.write(c.src, list)
+  c.report(c.out, "toggle", res)
+}

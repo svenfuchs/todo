@@ -24,11 +24,11 @@ type ArchiveCmd struct {
 
 func (c ArchiveCmd) Run() {
   list := c.list()
-  dump := list.Select(c.filter())
+  arch := list.Select(c.filter())
   keep := list.Reject(c.filter())
 
-  c.append(c.archive, dump)
+  c.append(c.archive, arch)
   c.write(c.src, keep)
-  c.write(c.out, dump)
+  c.report(c.out, "archive", arch)
 }
 

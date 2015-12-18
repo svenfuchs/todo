@@ -14,6 +14,7 @@ type Args struct {
   Date string
   Format string
   Config map[string]string
+  Report bool
 }
 
 func (a *Args) SetConfig(args ...string) {

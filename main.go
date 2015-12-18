@@ -15,6 +15,7 @@ func main() {
 	c.Flag("archive",  "File to archive to."                    ).Short('a').SetValue(&funcValue{ set(a.SetConfig, "archive") })
 	c.Flag("format",   "Output format."                         ).Short('o').StringVar(&a.Format)
 	c.Flag("before",   "Filter by done before."                 ).Short('b').SetValue(&funcValue{ set(a.SetDate, "before") })
+  c.Flag("report",   "Print a report to stderr."              ).Short('r').Default("true").BoolVar(&a.Report)
 
   a = NewArgs()
 	c = app.Command("list", "Filter and list todo items."       ).Action(action(a.Run, "list"))
@@ -37,11 +38,13 @@ func main() {
 	c.Flag("date",     "Filter by done date."                   ).Short('a').SetValue(&funcValue{ set(a.SetDate, "date")   })
 	c.Flag("after",    "Filter by done after."                  ).Short('a').SetValue(&funcValue{ set(a.SetDate, "after")  })
 	c.Flag("since",    "Filter by done since."                  ).Short('n').SetValue(&funcValue{ set(a.SetDate, "since")  })
+  c.Flag("report",   "Print a report to stderr."              ).Short('r').Default("true").BoolVar(&a.Report)
 
   s := c.Command("idonethis", "Service Idonethis"             ).Action(action(a.Run, "push")).PreAction(action(a.SetConfig, "service", "idonethis"))
   s.Flag("username", "Idonethis username"                     ).Envar("TODO_IDONETHIS_USERNAME").SetValue(&funcValue{ set(a.SetConfig, "username") })
   s.Flag("token",    "Idonethis token"                        ).Envar("TODO_IDONETHIS_TOKEN"   ).SetValue(&funcValue{ set(a.SetConfig, "token") })
   s.Flag("team",     "Idonethis team"                         ).Envar("TODO_IDONETHIS_TEAM"    ).SetValue(&funcValue{ set(a.SetConfig, "team") })
+  c.Flag("report",   "Print a report to stderr."              ).Short('r').Default("true").BoolVar(&a.Report)
 	s.Arg("input",     "Filter by full line."                   ).StringVar(&a.Line)
 
   a = NewArgs()
@@ -55,6 +58,7 @@ func main() {
 	c.Flag("after",    "Filter by done after."                  ).Short('a').SetValue(&funcValue{ set(a.SetDate, "after")  })
 	c.Flag("since",    "Filter by done since."                  ).Short('n').SetValue(&funcValue{ set(a.SetDate, "since")  })
 	c.Flag("before",   "Filter by done before."                 ).Short('b').SetValue(&funcValue{ set(a.SetDate, "before") })
+  c.Flag("report",   "Print a report to stderr."              ).Short('r').Default("true").BoolVar(&a.Report)
 	c.Arg("input",     "Filter by full line."                   ).StringVar(&a.Line)
 
   kingpin.MustParse(app.Parse(os.Args[1:]))

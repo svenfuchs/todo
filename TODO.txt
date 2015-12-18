@@ -1,18 +1,11 @@
-x Fix line not being respected done:2015-12-17 [1]
 - Add list sorting [2]
-- Use log, fix error reporting TODOs [3]
-
-# stdin/out vs file handling
-
-Currently works fine for the `list` command. For commands that "report" on
-stdout the option to pipe data in is pretty much useless, because the
-output would be cluttered by the report.
-
+x Fix line not being respected done:2015-12-17 [1]
+x Use log, fix error reporting TODOs done:2015-12-18 [3]
 x Make `archive`, `push`, and `toggle` report to stderr done:2015-12-17 [4]
-- Add a template for the report (e.g. "3 items archived: ...") [5]
-- Add `--report`, defaulting to true, so `--no-report` can turn it off [6]
+x Add a template for the report (e.g. "3 items archived: ...") done:2015-12-18 [5]
+x Add `--report`, defaulting to true, so `--no-report` can turn it off done:2015-12-18 [6]
 
 
 
 
-printf("%+v\n", selected)
+printf("%+v\n", list)
