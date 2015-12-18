@@ -13,10 +13,12 @@ var (
 
 func NewIdonethis(config map[string]string) Idonethis {
   after := time.Now().AddDate(0, 0, -7).Format("2006-01-02")
-  return Idonethis { config["team"], config["username"], config["token"], after }
+  http  := NewHttpClient()
+  return Idonethis { &http, config["team"], config["username"], config["token"], after }
 }
 
 type Idonethis struct {
+  http  *HttpClient
   team  string
   user  string
   token string
@@ -57,8 +59,7 @@ func (s Idonethis) get() []byte {
     "Authorization": "Token " + s.token,
     "Content-Type":  "application/json",
   }
-  request := NewHttpRequest("GET", idonethis_uri, query, headers, nil)
-  return request.Run()
+  return s.http.run("GET", idonethis_uri, query, headers, nil)
 }
 
 func (s Idonethis) post(line string) {
@@ -70,6 +71,5 @@ func (s Idonethis) post(line string) {
     "team": s.team,
     "raw_text": line,
   }));
-  request := NewHttpRequest("POST", idonethis_uri, nil, headers, body)
-  request.Run()
+  s.http.run("POST", idonethis_uri, nil, headers, body)
 }
