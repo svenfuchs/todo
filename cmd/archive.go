@@ -6,11 +6,6 @@ import (
 )
 
 func NewArchiveCmd(args *Args) Runnable {
-  args.Status = Done
-  if args.Date == "" {
-    args.Date = "before:two weeks ago"
-  }
-
   src := NewIo(args.Path)
   out := NewStdErr()
   archive := NewIo(args.Config["archive"])
@@ -23,6 +18,8 @@ type ArchiveCmd struct {
 }
 
 func (c ArchiveCmd) Run() {
+  c.initArgs(c.args)
+
   list := c.list()
   arch := list.Select(c.filter())
   keep := list.Reject(c.filter())
@@ -32,3 +29,9 @@ func (c ArchiveCmd) Run() {
   c.report(c.out, "archive", arch)
 }
 
+func (c ArchiveCmd) initArgs(args *Args) {
+  args.Status = Done
+  if args.Date == "" {
+    args.Date = "before:two weeks ago"
+  }
+}

@@ -23,11 +23,13 @@ type Idonethis struct {
   after string
 }
 
-func (s Idonethis) Push(line string) {
-  s.post(line)
+func (s Idonethis) WriteLines(lines []string) {
+  for _, line := range lines {
+    s.post(line)
+  }
 }
 
-func (s Idonethis) Fetch() []string {
+func (s Idonethis) ReadLines() []string {
   body  := s.get()
   page  := s.decode(body)
   lines := []string{}

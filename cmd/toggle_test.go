@@ -45,3 +45,15 @@ func TestCmdToggleByProjectsFound(t *testing.T) {
 
   AssertEqual(t, actual, expected)
 }
+
+func TestCmdToggleReportsToggled(t *testing.T) {
+  src  := NewMemoryIo("# Comment\n- foo [1]\nx bar done:2015-12-13 [2]")
+  out  := NewMemoryIo("")
+  args := &Args{ Ids: []int{ 2 }, Report: true }
+
+  ToggleCmd { Cmd { args, src, out } }.Run()
+  actual := out.ReadLines()
+  expected := []string{ "Toggled 1 item:", "", "- bar [2]" }
+
+  AssertEqual(t, actual, expected)
+}

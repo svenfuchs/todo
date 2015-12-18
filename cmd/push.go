@@ -8,6 +8,29 @@ import (
 
 
 func NewPushCmd(args *Args) Runnable {
+  src := NewIo(args.Path)
+  out := NewStdErr()
+  srv := NewService(args.Config)
+  return PushCmd{ Cmd { args, src, out }, srv }
+}
+
+type PushCmd struct {
+  Cmd
+  srv Service
+}
+
+func (c PushCmd) Run() {
+  c.initArgs(c.args)
+
+  list := c.list()
+  list = list.Select(c.filter())
+  list = list.Reject(Filter{ Ids: c.ids() })
+
+  c.srv.WriteLines(c.formatted(list.Items))
+  c.report(c.out, "push", list)
+}
+
+func (c PushCmd) initArgs(args *Args) {
   args.Status = Done
   if args.Date == "" {
     args.Date = "since:yesterday"
@@ -15,38 +38,11 @@ func NewPushCmd(args *Args) Runnable {
   if args.Format == "" {
     args.Format = "text,tags,id"
   }
-
-  src := NewIo(args.Path)
-  out := NewStdErr()
-  return PushCmd{ Cmd { args, src, out } }
 }
 
-type PushCmd struct {
-  Cmd
-}
-
-func (c PushCmd) Run() {
-  service := NewService(c.args.Config)
-  ids := c.ids(service)
-
-  list := c.list()
-  list = list.Select(c.filter())
-  list = list.Reject(Filter{ Ids: ids })
-
-  c.push(service, list)
-  c.report(c.out, "push", list)
-}
-
-func (c PushCmd) push(service Service, list List) {
-  lines := c.formatted(list.Items)
-  for _, line := range lines {
-    service.Push(line)
-  }
-}
-
-func (c PushCmd) ids(service Service) []int {
+func (c PushCmd) ids() []int {
   ids   := []int{}
-  lines := service.Fetch()
+  lines := c.srv.ReadLines()
   for _, line := range lines {
     ids = append(ids, ParseItem(line).Id)
   }

@@ -4,8 +4,3 @@ x Use log, fix error reporting TODOs done:2015-12-18 [3]
 x Make `archive`, `push`, and `toggle` report to stderr done:2015-12-17 [4]
 x Add a template for the report (e.g. "3 items archived: ...") done:2015-12-18 [5]
 x Add `--report`, defaulting to true, so `--no-report` can turn it off done:2015-12-18 [6]
-
-
-
-
-printf("%+v\n", list)
