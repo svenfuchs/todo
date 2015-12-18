@@ -1,29 +1,40 @@
 package io
 
 import (
+  "io"
   "bufio"
   "log"
   "os"
   "strings"
 )
 
-// var stdin *os.File
+var (
+  Stdin  io.ReadWriter = os.Stdin
+  Stdout io.ReadWriter = os.Stdout
+  Stderr io.ReadWriter = os.Stderr
+)
+
+// type file interface {
+//   io.Closer
+//   io.Reader
+//   io.Writer
+// }
 
 func NewStdOut() Io {
-  return StdIo{}
+  return StdIo{ Stdout }
 }
 
 func NewStdErr() Io {
-  return StdIo{ os.Stderr }
+  return StdIo{ Stderr }
 }
 
 type StdIo struct{
-  out *os.File
+  out io.Writer
 }
 
 func (s StdIo) ReadLines() []string {
   lines   := []string{}
-  scanner := bufio.NewScanner(os.Stdin)
+  scanner := bufio.NewScanner(Stdin)
 
   for scanner.Scan() {
     lines = append(lines, scanner.Text())

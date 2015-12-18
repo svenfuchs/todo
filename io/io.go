@@ -1,7 +1,5 @@
 package io
 
-// var stdin *os.File
-
 import (
   "os"
 )

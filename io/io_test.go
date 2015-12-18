@@ -1,15 +1,17 @@
-package io
+package io_test
 
 import (
+  "bytes"
   "io/ioutil"
   "os"
   "testing"
-  . "github.com/svenfuchs/todo/test"
+  "github.com/svenfuchs/todo/io"
 )
 
-const (
-  path string = "/tmp/todo.test.txt"
+var (
+  path = "/tmp/todo.test.txt"
 )
+
 
 func TestMain(m *testing.M) {
   setup()
@@ -19,32 +21,16 @@ func TestMain(m *testing.M) {
 }
 
 func setup() {
-  data := []byte("- foo [1]\nx bar [2]\n")
-  checkErr(ioutil.WriteFile(path, data, 0644))
+  io.Stdin  = bytes.NewBuffer([]byte{})
+  io.Stdout = bytes.NewBuffer([]byte{})
+  io.Stderr = bytes.NewBuffer([]byte{})
 }
 
 func teardown() {
-  checkErr(os.Remove(path))
+  os.Remove(path)
 }
 
-func checkErr(err error) {
-  if err != nil {
-    panic(err)
-  }
+func writeFile(data []byte) {
+  err := ioutil.WriteFile(path, data, 0644)
+  if err != nil { panic(err) }
 }
-
-func TestFileIoReadLines(t *testing.T) {
-  actual := NewIo(path).ReadLines()
-  expected := []string{ "- foo [1]", "x bar [2]" }
-  AssertEqual(t, actual, expected)
-}
-
-func TestFileIoWriteLines(t *testing.T) {
-  source := NewIo(path)
-  source.WriteLines([]string{ "- foo [1]", "x bar [2]" })
-
-  actual := source.ReadLines()
-  expected := []string{ "- foo [1]", "x bar [2]" }
-  AssertEqual(t, actual, expected)
-}
-
