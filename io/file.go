@@ -2,6 +2,7 @@ package io
 
 import (
   "bufio"
+  "log"
   "os"
   "strings"
 )
@@ -17,37 +18,41 @@ type FileIo struct {
   path string
 }
 
-func (s FileIo) ReadLines() ([]string, error) {
-  io, err := os.Open(s.path)
-  defer io.Close()
-
+func (s FileIo) ReadLines() []string {
+  file    := s.openFile()
   lines   := []string{}
-  scanner := bufio.NewScanner(io)
-
-  if err != nil {
-    return lines, err
-  }
+  scanner := bufio.NewScanner(file)
+  defer file.Close()
 
   for scanner.Scan() {
     lines = append(lines, scanner.Text())
   }
-  return lines, scanner.Err()
+  if err := scanner.Err(); err != nil {
+    log.Fatal(err)
+  }
+  return lines
 }
 
-func (s FileIo) WriteLines(lines []string) error {
-  return s.doWriteLines(lines, os.O_TRUNC)
+func (s FileIo) WriteLines(lines []string) {
+  s.writeLines(lines, os.O_TRUNC)
 }
 
-func (s FileIo) AppendLines(lines []string) error {
-  return s.doWriteLines(lines, os.O_APPEND)
+func (s FileIo) AppendLines(lines []string) {
+  s.writeLines(lines, os.O_APPEND)
 }
 
-func (s FileIo) doWriteLines(lines []string, mode int) error {
-  if len(lines) == 0 { return nil }
+func (s FileIo) openFile() *os.File {
+  file, err := os.Open(s.path)
+  if err != nil { log.Fatal(err) }
+  return file
+}
+
+func (s FileIo) writeLines(lines []string, mode int) {
+  if len(lines) == 0 { return }
   file, err := os.OpenFile(s.path, os.O_WRONLY | os.O_CREATE | mode, 0644)
   defer file.Close()
-  if err != nil { return err }
-  file.Write([]byte(strings.Join(lines, "\n") + "\n"))
-  return nil
+  if err != nil { log.Fatal(err) }
+  str := strings.Join(lines, "\n") + "\n"
+  file.Write([]byte(str))
 }
 

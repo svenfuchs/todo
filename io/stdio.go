@@ -2,6 +2,7 @@ package io
 
 import (
   "bufio"
+  "log"
   "os"
   "strings"
 )
@@ -20,22 +21,25 @@ type StdIo struct{
   out *os.File
 }
 
-func (s StdIo) ReadLines() ([]string, error) {
+func (s StdIo) ReadLines() []string {
   lines   := []string{}
   scanner := bufio.NewScanner(os.Stdin)
 
   for scanner.Scan() {
     lines = append(lines, scanner.Text())
   }
-  return lines, scanner.Err()
+  if err := scanner.Err(); err != nil {
+    log.Fatal(err)
+  }
+  return lines
 }
 
-func (s StdIo) WriteLines(lines []string) error {
-  if len(lines) == 0 { return nil }
-  s.out.Write([]byte(strings.Join(lines, "\n") + "\n"))
-  return nil
+func (s StdIo) WriteLines(lines []string) {
+  if len(lines) == 0 { return }
+  str := strings.Join(lines, "\n") + "\n"
+  s.out.Write([]byte(str))
 }
 
-func (s StdIo) AppendLines(lines []string) error {
-  return s.WriteLines(lines)
+func (s StdIo) AppendLines(lines []string) {
+  s.WriteLines(lines)
 }

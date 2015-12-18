@@ -7,9 +7,9 @@ import (
 )
 
 type Io interface {
-  ReadLines() ([]string, error)
-  WriteLines([]string) error
-  AppendLines([]string) error
+  ReadLines() []string
+  WriteLines([]string)
+  AppendLines([]string)
 }
 
 func NewIo(path string) Io {
@@ -18,11 +18,5 @@ func NewIo(path string) Io {
     return NewStdOut()
   } else {
     return NewFileIo(path)
-  }
-}
-
-func check(err error) {
-  if err != nil {
-    panic(err)
   }
 }

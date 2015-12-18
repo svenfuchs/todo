@@ -16,8 +16,8 @@ type Cmd struct {
 }
 
 func (c Cmd) list() List {
-  lines, _ := c.src.ReadLines()
-  list := ParseItemList(lines)
+  lines := c.src.ReadLines()
+  list  := ParseItemList(lines)
   return list
 }
 

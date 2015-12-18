@@ -24,7 +24,7 @@ type PushCmd struct {
 
 func (c PushCmd) Run() {
   service := NewService(c.args.Config)
-  ids, _  := c.ids(service) // TODO report error
+  ids := c.ids(service)
 
   list := c.list()
   list = list.Select(c.filter())
@@ -36,19 +36,17 @@ func (c PushCmd) Run() {
 
 func (c PushCmd) push(list List, service Service) {
   for _, item := range list.Items {
-    service.Push(item.Line) // TODO report error, use format
+    service.Push(item.Line) // TODO use format
   }
 }
 
-func (c PushCmd) ids(service Service) ([]int, error) {
-  var ids []int
-  lines, err := service.Fetch()
-  if err != nil { return ids, err }
-
+func (c PushCmd) ids(service Service) []int {
+  ids   := []int{}
+  lines := service.Fetch()
   for _, line := range lines {
     ids = append(ids, ParseItem(line).Id)
   }
-  return ids, nil
+  return ids
 }
 
 func includesInt(nums []int, num int) bool {

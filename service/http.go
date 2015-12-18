@@ -2,9 +2,9 @@ package service
 
 import (
   "bytes"
-  "errors"
   "fmt"
   "io/ioutil"
+  "log"
   "net/http"
   "net/url"
 )
@@ -24,32 +24,27 @@ func NewHttpRequest(method string, uri string, query *map[string]string, headers
     body = bytes.NewBuffer([]byte{})
   }
   if query != nil {
-    uri, _ = appendQueryString(uri, *query) // TODO report error
+    uri = appendQueryString(uri, *query)
   }
   return HttpRequest{ method, uri, headers, body }
 }
 
-func (h HttpRequest) run() ([]byte, error) {
-  var body []byte
-  request, err := h.newRequest()
-  if err != nil { return body, err }
-
+func (h HttpRequest) Run() []byte {
+  request := h.newRequest()
   response, err := http.DefaultClient.Do(request)
   defer response.Body.Close()
-  if err != nil { return body, err }
+  if err != nil { log.Fatal(err) }
 
-  err = h.checkResponseStatus(response)
-  if err != nil { return body, err }
-
-  return h.readResponseBody(response)
+  h.checkStatus(response)
+  return h.readBody(response)
 }
 
-func (h HttpRequest) newRequest() (*http.Request, error) {
+func (h HttpRequest) newRequest() *http.Request {
   request, err := http.NewRequest(h.method, h.uri, h.body)
-  if err != nil { return nil, err }
+  if err != nil { log.Fatal(err) }
 
   h.setHeaders(request, h.headers)
-  return request, nil
+  return request
 }
 
 func (h HttpRequest) setHeaders(request *http.Request, headers *map[string]string) {
@@ -58,11 +53,12 @@ func (h HttpRequest) setHeaders(request *http.Request, headers *map[string]strin
   }
 }
 
-func appendQueryString(uri string, data map[string]string) (string, error) {
-  u, err := url.ParseRequestURI(uri)
-  if err != nil { return uri, err }
-  u.RawQuery = toQueryString(data)
-  return fmt.Sprintf("%v", u), nil
+func appendQueryString(uri string, data map[string]string) string {
+  url, err := url.ParseRequestURI(uri)
+  if err != nil { log.Fatal(err) }
+
+  url.RawQuery = toQueryString(data)
+  return fmt.Sprintf("%v", url)
 }
 
 func toQueryString(data map[string]string) string {
@@ -73,24 +69,16 @@ func toQueryString(data map[string]string) string {
   return query.Encode()
 }
 
-func (h HttpRequest) checkResponseStatus(r *http.Response) error {
-  if r.StatusCode / 100 == 2 {
-    return nil
+func (h HttpRequest) checkStatus(response *http.Response) {
+  if response.StatusCode / 100 != 2 {
+    body := h.readBody(response)
+    log.Fatal(fmt.Sprintf("%d %s %s (%q)\n", response.StatusCode, h.method, h.uri, body))
   }
-
-  body, err := ioutil.ReadAll(r.Body)
-  if err != nil { return err }
-
-  msg := "%s request to %s failed: (%d) %s\n"
-  return errors.New(fmt.Sprintf(msg, h.method, h.uri, r.StatusCode, string(body)))
 }
 
-func (h HttpRequest) readResponseBody(response *http.Response) ([]byte, error) {
+func (h HttpRequest) readBody(response *http.Response) []byte {
   body, err := ioutil.ReadAll(response.Body)
-  if err != nil {
-    msg := "Could not read response body for %s request to %s. Status: %d Error: %q\n"
-    return body, errors.New(fmt.Sprintf(msg, h.method, h.uri, response.StatusCode, err))
-  }
-  return body, err
+  if err != nil { log.Fatal(err) }
+  return body
 }
 

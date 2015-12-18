@@ -23,22 +23,19 @@ type Idonethis struct {
   after string
 }
 
-func (s Idonethis) Push(line string) error {
-  _, err := s.post(line)
-  return err
+func (s Idonethis) Push(line string) {
+  s.post(line)
 }
 
-func (s Idonethis) Fetch() ([]string, error) {
-  var lines []string
-
-  body, err := s.get()
-  if err != nil { return lines, err }
-  page := s.decode(body)
+func (s Idonethis) Fetch() []string {
+  body  := s.get()
+  page  := s.decode(body)
+  lines := []string{}
 
   for _, done := range page.Results {
     lines = append(lines, done.Raw_text)
   }
-  return lines, nil
+  return lines
 }
 
 func (s Idonethis) decode(body []byte) api.Page {
@@ -47,7 +44,7 @@ func (s Idonethis) decode(body []byte) api.Page {
   return page
 }
 
-func (s Idonethis) get() ([]byte, error) {
+func (s Idonethis) get() []byte {
   query  := &map[string]string {
     "owner": s.user,
     "team": s.team,
@@ -58,10 +55,11 @@ func (s Idonethis) get() ([]byte, error) {
     "Authorization": "Token " + s.token,
     "Content-Type":  "application/json",
   }
-  return NewHttpRequest("GET", idonethis_uri, query, headers, nil).run()
+  request := NewHttpRequest("GET", idonethis_uri, query, headers, nil)
+  return request.Run()
 }
 
-func (s Idonethis) post(line string) ([]byte, error) {
+func (s Idonethis) post(line string) {
   headers := &map[string]string {
     "Authorization": "Token " + s.token,
     "Content-Type":  "application/x-www-form-urlencoded",
@@ -70,5 +68,6 @@ func (s Idonethis) post(line string) ([]byte, error) {
     "team": s.team,
     "raw_text": line,
   }));
-  return NewHttpRequest("POST", idonethis_uri, nil, headers, body).run()
+  request := NewHttpRequest("POST", idonethis_uri, nil, headers, body)
+  request.Run()
 }

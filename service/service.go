@@ -10,6 +10,6 @@ func NewService(config map[string]string) Service {
 }
 
 type Service interface {
-  Push(line string) error
-  Fetch() ([]string, error)
+  Push(line string)
+  Fetch() []string
 }
