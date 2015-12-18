@@ -36,8 +36,8 @@ go build
 
 ## Usage
 
-All dates can be given as named date strings, e.g. `today`, `yesterday`, `two
-weeks ago`, `last monday` etc.
+All dates can be given as `YYYY-mm-dd`, or as named date strings, e.g. `today`,
+`yesterday`, `two weeks ago`, `last monday` etc.
 
 List items:
 

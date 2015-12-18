@@ -2,7 +2,7 @@ package test
 
 import (
   "fmt"
-  "errors"
+  "log"
   "io/ioutil"
   "net/http"
   "strings"
@@ -20,10 +20,9 @@ type stubTransport struct{
 }
 
 func (t *stubTransport) RoundTrip(request *http.Request) (*http.Response, error) {
-  err := t.checkUrl(request.URL.String())
-  if err != nil { return nil, err }
+  t.checkUrl(request.URL.String())
 
-  response := &http.Response{
+  response := http.Response{
     Request: request,
     StatusCode: t.status,
     Header: http.Header{},
@@ -32,13 +31,11 @@ func (t *stubTransport) RoundTrip(request *http.Request) (*http.Response, error)
   for key, value := range t.headers {
     response.Header.Set(key, value)
   }
-  return response, nil
+  return &response, nil
 }
 
-func (t stubTransport) checkUrl(url string) error {
-  var err error
+func (t stubTransport) checkUrl(url string) {
   if t.url != url {
-    err = errors.New(fmt.Sprintf("Unexpected request to %s (expected %s).", url, t.url))
+    log.Fatal(fmt.Sprintf("Unexpected request to %s (expected %s).", url, t.url))
   }
-  return err
 }

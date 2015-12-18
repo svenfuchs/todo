@@ -9,7 +9,7 @@ import (
   "net/url"
 )
 
-var Client = *http.DefaultClient
+var Client *http.Client = http.DefaultClient
 
 func NewHttpClient() HttpClient {
   return HttpClient {}
@@ -19,7 +19,7 @@ type HttpClient struct {}
 
 func (c HttpClient) run(method string, uri string, query *map[string]string, headers *map[string]string, body *bytes.Buffer) []byte {
   request := NewHttpRequest(method, uri, query, headers, body)
-  return request.run(&Client)
+  return request.run(Client)
 }
 
 func NewHttpRequest(method string, uri string, query *map[string]string, headers *map[string]string, body *bytes.Buffer) HttpRequest {
@@ -47,8 +47,7 @@ func (r HttpRequest) run(client *http.Client) []byte {
   if err != nil { log.Fatal(err) }
   r.setRequestHeaders(request)
 
-  response, err := client.Do(request)
-  defer response.Body.Close()
+  response, err := Client.Do(request)
   if err != nil { log.Fatal(err) }
 
   r.checkResponseStatus(response)
@@ -64,12 +63,13 @@ func (r HttpRequest) setRequestHeaders(request *http.Request) {
 func (r HttpRequest) checkResponseStatus(response *http.Response) {
   if response.StatusCode / 100 != 2 {
     body := r.readResponseBody(response)
-    log.Fatal(fmt.Sprintf("%d %s %s (%q)\n", response.StatusCode, r.method, r.uri, body))
+    log.Fatal(fmt.Sprintf("%d %s %s: (%q)\n", response.StatusCode, r.method, r.uri, body))
   }
 }
 
 func (c HttpRequest) readResponseBody(response *http.Response) []byte {
   body, err := ioutil.ReadAll(response.Body)
+  defer response.Body.Close()
   if err != nil { log.Fatal(err) }
   return body
 }
