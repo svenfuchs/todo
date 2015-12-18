@@ -34,8 +34,8 @@ func checkErr(err error) {
 }
 
 func TestFileIoReadLines(t *testing.T) {
-  actual, _ := NewIo(path).ReadLines()
-  expected  := []string{ "- foo [1]", "x bar [2]" }
+  actual := NewIo(path).ReadLines()
+  expected := []string{ "- foo [1]", "x bar [2]" }
   AssertEqual(t, actual, expected)
 }
 
@@ -43,8 +43,8 @@ func TestFileIoWriteLines(t *testing.T) {
   source := NewIo(path)
   source.WriteLines([]string{ "- foo [1]", "x bar [2]" })
 
-  actual, _ := source.ReadLines()
-  expected  := []string{ "- foo [1]", "x bar [2]" }
+  actual := source.ReadLines()
+  expected := []string{ "- foo [1]", "x bar [2]" }
   AssertEqual(t, actual, expected)
 }
 

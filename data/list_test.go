@@ -50,10 +50,15 @@ func TestListReject(t *testing.T) {
   AssertEqual(t, len(items), 2)
 }
 
-// func TestListToggleFound(t *testing.T) {
-//   list := ParseItemList([]string{ "# Comment", "- foo [1]", "x bar [2]" })
-//   list  = list.Toggle(Filter{ Text: "bar" })
-//   i    := list.Items[2]
-//   AssertEqual(t, i.Text, "bar")
-//   AssertEqual(t, i.Status, Pend)
-// }
+func TestListToggleChangesExistingList(t *testing.T) {
+  list := ParseItemList([]string{ "# Comment", "- foo [1]", "x bar [2]" })
+  list.Toggle(Filter{ Ids: []int{ 1 } })
+  AssertEqual(t, list.Items[1].Status, Done)
+}
+
+func TestListToggleReturnsResultsList(t *testing.T) {
+  list := ParseItemList([]string{ "# Comment", "- foo [1]", "x bar [2]" })
+  res := list.Toggle(Filter{ Ids: []int{ 1 } })
+  AssertEqual(t, len(res.Items), 1)
+  AssertEqual(t, res.Items[0].Status, Done)
+}
