@@ -1,4 +1,4 @@
-# TODO.txt [![Build Status](https://secure.travis-ci.org/svenfuchs/todo.png?branch=master)](https://travis-ci.org/svenfuchs/todo.txt)
+# TODO.txt
 
 My personal flavor of the [Todo.txt](https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format)
 format. This is a Go port of my [Ruby CLI](https://github.com/svenfuchs/todo.txt).
